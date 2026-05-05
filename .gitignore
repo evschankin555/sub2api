@@ -2,9 +2,9 @@ docs/claude-relay-service/
 .codex
 
 # ===================
-# Go 后端
+# Go еђЋз«Ї
 # ===================
-# 二进制文件
+# дєЊиї›е€¶ж–‡д»¶
 *.exe
 *.exe~
 *.dll
@@ -15,21 +15,21 @@ backend/server
 backend/sub2api
 backend/main
 
-# Go 测试二进制
+# Go жµ‹иЇ•дєЊиї›е€¶
 *.test
 
-# 测试覆盖率
+# жµ‹иЇ•и¦†з›–зЋ‡
 *.out
 coverage.html
 
-# 依赖（使用 go mod）
+# дѕќиµ–пј€дЅїз”Ё go modпј‰
 vendor/
 
-# Go 编译缓存
+# Go зј–иЇ‘зј“е­
 backend/.gocache/
 
 # ===================
-# Node.js / Vue 前端
+# Node.js / Vue е‰Ќз«Ї
 # ===================
 node_modules/
 frontend/node_modules/
@@ -39,14 +39,14 @@ frontend/dist/
 vite.config.d.ts
 vite.config.js.timestamp-*
 
-# 日志
+# ж—Ґеї—
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
 # ===================
-# 环境配置
+# зЋЇеўѓй…ЌзЅ®
 # ===================
 .env
 .env.local
@@ -56,7 +56,7 @@ pnpm-debug.log*
 docker-compose.override.yml
 
 # ===================
-# IDE / 编辑器
+# IDE / зј–иѕ‘е™Ё
 # ===================
 .idea/
 .vscode/
@@ -68,14 +68,14 @@ docker-compose.override.yml
 .classpath
 
 # ===================
-# 操作系统
+# ж“ЌдЅњзі»з»џ
 # ===================
 .DS_Store
 Thumbs.db
 Desktop.ini
 
 # ===================
-# 临时文件
+# дёґж—¶ж–‡д»¶
 # ===================
 tmp/
 temp/
@@ -88,13 +88,13 @@ temp/
 .serena/
 
 # ===================
-# 构建产物
+# жћ„е»єдє§з‰©
 # ===================
 dist/
 build/
 release/
 
-# 后端嵌入的前端构建产物
+# еђЋз«ЇеµЊе…Ґзљ„е‰Ќз«Їжћ„е»єдє§з‰©
 # Keep a placeholder file so `//go:embed all:dist` always has a match in CI/lint,
 # while still ignoring generated frontend build outputs.
 backend/internal/web/dist/
@@ -102,18 +102,18 @@ backend/internal/web/dist/
 backend/internal/web/dist/*
 !backend/internal/web/dist/.keep
 
-# 后端运行时缓存数据
+# еђЋз«ЇиїђиЎЊж—¶зј“е­ж•°жЌ®
 backend/data/
 
 # ===================
-# 本地配置文件（包含敏感信息）
+# жњ¬ењ°й…ЌзЅ®ж–‡д»¶пј€еЊ…еђ«ж•Џж„џдїЎжЃЇпј‰
 # ===================
 backend/config.yaml
 deploy/config.yaml
 backend/.installed
 
 # ===================
-# 其他
+# е…¶д»–
 # ===================
 tests
 CLAUDE.md
@@ -131,6 +131,8 @@ docs/*
 !docs/PAYMENT.md
 !docs/PAYMENT_CN.md
 !docs/ADMIN_PAYMENT_INTEGRATION_API.md
+!docs/local/
+!docs/local/**
 .serena/
 .codex/
 frontend/coverage/
