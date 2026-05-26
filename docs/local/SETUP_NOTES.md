@@ -261,3 +261,12 @@ This mode keeps the data in project directories, which simplifies backup, migrat
 - The previous `ai-route-proxy-model-detail.service` on `3123` was stopped and disabled only after `ai_route_proxy_active_streams` reached `0`.
 - Rollback path: enable/start `ai-route-proxy-model-detail.service`, switch both Nginx site files from `127.0.0.1:3124` back to `127.0.0.1:3123`, then run `nginx -t && systemctl reload nginx`.
 - Validation passed: `go test ./...` on the staged proxy source, prompt trace start/stop API smoke, prompt capture smoke with secret redaction and system-message exclusion, `npm run build`, `nginx -t`, public `/healthz` version `2026-05-26.4`, and public telemetry version `2026-05-26.4`.
+
+## 2026-05-27 AI Route Key Tabs And Prompt Badges
+- `ai-route-proxy` upgraded to version `2026-05-27.1` and now includes admin-only per-key prompt trace counters in telemetry: active trace session, prompt events for 24h/14d, and last prompt trace event time. Public telemetry still omits these fields without a valid admin token.
+- The hidden statistics monitor key table now has two tabs: active keys with current streams and recent idle keys. The admin-only prompt filter shows only keys with an active prompt trace session or stored prompt trace events.
+- Prompt trace badges are shown in the key row only when the admin token is active and prompt data exists for that key. If no prompt trace events exist yet, the badge/filter count remains zero.
+- Blue-green rollout used `/opt/ai-route-proxy/bin/ai-route-proxy-20260527-key-tabs` and `ai-route-proxy-key-tabs.service` on `127.0.0.1:3125`. Nginx routes for `ai.gptclaudegemini.xyz` and `statistics.gptclaudegemini.xyz/api/proxy/telemetry` now point to `3125`.
+- The previous `ai-route-proxy-prompt-trace.service` on `3124` was stopped and disabled after its active stream count reached `0`. Old Nginx backup files were moved from `sites-enabled` to `/etc/nginx/sites-backups` so backup server blocks are not loaded.
+- Rollback path: enable/start `ai-route-proxy-prompt-trace.service`, switch both Nginx site files from `127.0.0.1:3125` back to `127.0.0.1:3124`, then run `nginx -t && systemctl reload nginx`.
+- Validation passed: `go test ./...` on the staged proxy source, `npm run build` for `ccg-stats-mini-frontend`, `nginx -t`, public `/healthz` version `2026-05-27.1`, public telemetry version `2026-05-27.1`, admin telemetry returns the new prompt trace fields, and Playwright smoke confirmed active/recent tabs plus the prompt filter without console errors.
