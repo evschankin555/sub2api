@@ -1,0 +1,459 @@
+﻿<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Proxy Route Row Compact Variants</title>
+  <style>
+    :root {
+      --bg: #0d0b07;
+      --panel: #15120d;
+      --panel-2: #1d1810;
+      --line: rgba(244, 191, 83, .22);
+      --line-soft: rgba(255,255,255,.08);
+      --gold: #f5bf55;
+      --gold-2: #ffdc92;
+      --green: #7be8a3;
+      --cyan: #79d7ff;
+      --red: #ff7a68;
+      --text: #f5efe1;
+      --muted: #a79d8b;
+      --dim: #71695c;
+      --chip: rgba(255,255,255,.055);
+      --mono: "Cascadia Mono", "IBM Plex Mono", Consolas, monospace;
+      --sans: "Trebuchet MS", "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at 10% 0%, rgba(245,191,85,.12), transparent 32rem),
+        radial-gradient(circle at 90% 8%, rgba(121,215,255,.08), transparent 28rem),
+        linear-gradient(180deg, #0b0906, #11100d 46%, #090807);
+      color: var(--text);
+      font-family: var(--sans);
+      padding: 24px;
+    }
+
+    .page {
+      width: min(1440px, 100%);
+      margin: 0 auto;
+      display: grid;
+      gap: 22px;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 16px;
+      align-items: end;
+      padding: 20px;
+      border: 1px solid var(--line-soft);
+      border-radius: 28px;
+      background: linear-gradient(135deg, rgba(255,255,255,.055), rgba(255,255,255,.018));
+      box-shadow: 0 18px 60px rgba(0,0,0,.35);
+    }
+
+    h1, h2, p { margin: 0; }
+    h1 { font-size: clamp(28px, 4vw, 52px); line-height: .95; letter-spacing: -.05em; }
+    h2 { font-size: 15px; text-transform: uppercase; letter-spacing: .14em; color: var(--gold); }
+    p { color: var(--muted); line-height: 1.55; }
+
+    .storage-card {
+      min-width: 360px;
+      display: grid;
+      gap: 8px;
+      padding: 16px;
+      border-radius: 22px;
+      border: 1px solid rgba(121,215,255,.18);
+      background: rgba(121,215,255,.06);
+    }
+
+    .storage-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .storage-grid strong {
+      display: block;
+      font-family: var(--mono);
+      color: var(--cyan);
+      font-size: 18px;
+    }
+
+    .storage-grid span,
+    .micro-label {
+      display: block;
+      color: var(--dim);
+      font-size: 10px;
+      font-weight: 900;
+      letter-spacing: .13em;
+      text-transform: uppercase;
+    }
+
+    .variant {
+      display: grid;
+      gap: 12px;
+      padding: 16px;
+      border-radius: 28px;
+      border: 1px solid var(--line-soft);
+      background:
+        radial-gradient(circle at 0% 0%, rgba(245,191,85,.08), transparent 32rem),
+        rgba(255,255,255,.026);
+    }
+
+    .variant-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 12px;
+    }
+
+    .variant-head small { color: var(--muted); }
+
+    .row-shell {
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: linear-gradient(135deg, rgba(245,191,85,.07), rgba(255,255,255,.015));
+      overflow: hidden;
+    }
+
+    .chip, .tag, .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      min-width: 0;
+      border-radius: 999px;
+      border: 1px solid var(--line-soft);
+      background: var(--chip);
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 900;
+      line-height: 1;
+      padding: 5px 8px;
+      white-space: nowrap;
+    }
+
+    .chip.green { color: #c6ffd8; border-color: rgba(123,232,163,.25); background: rgba(123,232,163,.09); }
+    .chip.gold { color: var(--gold-2); border-color: rgba(245,191,85,.28); background: rgba(245,191,85,.09); }
+    .chip.cyan { color: #d8f2ff; border-color: rgba(121,215,255,.24); background: rgba(121,215,255,.09); }
+    .chip.red { color: #ffd0c9; border-color: rgba(255,122,104,.25); background: rgba(255,122,104,.1); }
+    .mono { font-family: var(--mono); }
+    .muted { color: var(--muted); }
+    .dim { color: var(--dim); }
+    .gold { color: var(--gold); }
+    .green { color: var(--green); }
+    .red { color: var(--red); }
+    .truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+    .crm-mini {
+      display: grid;
+      gap: 6px;
+      min-width: 0;
+      padding: 10px;
+      border-radius: 16px;
+      border: 1px solid rgba(245,191,85,.28);
+      background:
+        radial-gradient(circle at 12% 0%, rgba(245,191,85,.13), transparent 40%),
+        rgba(12,13,10,.58);
+    }
+
+    .crm-top,
+    .line {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      min-width: 0;
+      flex-wrap: wrap;
+    }
+
+    .crm-mail { font-weight: 950; letter-spacing: -.02em; }
+    .progress {
+      height: 6px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: rgba(255,255,255,.1);
+    }
+    .bar { display: block; height: 100%; border-radius: inherit; width: 70%; background: linear-gradient(90deg, var(--cyan), var(--green)); }
+
+    .score {
+      display: grid;
+      place-items: center;
+      min-width: 72px;
+      min-height: 62px;
+      border-radius: 999px;
+      color: var(--red);
+      background: radial-gradient(circle, rgba(255,122,104,.20), rgba(255,122,104,.05) 60%, transparent 61%);
+      font-weight: 950;
+      text-align: center;
+    }
+    .score small { display: block; max-width: 64px; color: #ff9b8c; font-size: 10px; line-height: 1.1; }
+
+    .metric { display: grid; gap: 2px; min-width: 0; }
+    .metric strong { font-family: var(--mono); font-size: 15px; }
+    .metric span { color: var(--dim); font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: .12em; }
+
+    /* Variant 1: two large cards + narrow telemetry rail. */
+    .v1-row {
+      display: grid;
+      grid-template-columns: minmax(220px, 1.25fr) minmax(330px, 1.75fr) minmax(210px, .9fr) minmax(86px, .35fr);
+      align-items: center;
+      gap: 10px;
+      min-height: 104px;
+      padding: 10px;
+    }
+    .identity-card { display: grid; gap: 5px; min-width: 0; }
+    .identity-card code { color: var(--gold); font-weight: 950; }
+    .model-live { color: var(--gold-2); font-size: 13px; font-weight: 900; }
+    .tags { display: flex; gap: 5px; flex-wrap: wrap; min-width: 0; }
+    .v1-metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; align-items: center; }
+    .route-compact { display: grid; gap: 6px; color: var(--muted); line-height: 1.2; }
+    .route-compact strong { color: var(--text); }
+
+    /* Variant 2: tile row; tags hidden behind summary counts. */
+    .v2-row {
+      display: grid;
+      grid-template-columns: 1.05fr 1.15fr .85fr .9fr .48fr;
+      gap: 8px;
+      padding: 8px;
+      min-height: 88px;
+    }
+    .tile {
+      min-width: 0;
+      display: grid;
+      align-content: center;
+      gap: 5px;
+      padding: 10px;
+      border: 1px solid var(--line-soft);
+      border-radius: 16px;
+      background: rgba(255,255,255,.035);
+    }
+    .tile-title { color: var(--dim); font-size: 10px; font-weight: 950; text-transform: uppercase; letter-spacing: .12em; }
+    .tile-main { min-width: 0; font-size: 14px; font-weight: 950; }
+    .tile-sub { min-width: 0; color: var(--muted); font-size: 12px; }
+    .mini-metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+    .mini-metrics .metric { padding: 8px; border-radius: 12px; background: rgba(0,0,0,.18); }
+
+    /* Variant 3: single-line table with expandable hint row. */
+    .v3-row { display: grid; gap: 0; }
+    .v3-main {
+      display: grid;
+      grid-template-columns: minmax(190px, 1.2fr) minmax(250px, 1.4fr) minmax(280px, 1.45fr) repeat(3, minmax(70px, .42fr)) minmax(70px, .34fr);
+      align-items: center;
+      gap: 8px;
+      padding: 10px 12px;
+      min-height: 70px;
+    }
+    .v3-more {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      padding: 8px 12px 10px;
+      border-top: 1px solid rgba(255,255,255,.06);
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .v3-more .tags { justify-content: flex-end; }
+
+    /* Variant 4: alert-first, most secondary data collapsed. */
+    .v4-row {
+      display: grid;
+      grid-template-columns: minmax(240px, 1.1fr) minmax(420px, 1.8fr) minmax(210px, .85fr) minmax(200px, .75fr);
+      gap: 10px;
+      align-items: stretch;
+      padding: 10px;
+      min-height: 96px;
+    }
+    .risk-card {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      align-items: center;
+      gap: 10px;
+      padding: 10px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,122,104,.22);
+      background: rgba(255,122,104,.08);
+    }
+    .risk-dot {
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      color: var(--red);
+      background: rgba(255,122,104,.12);
+      font-family: var(--mono);
+      font-weight: 950;
+    }
+    .route-pills { display: flex; flex-wrap: wrap; gap: 6px; align-content: center; }
+
+    .note {
+      padding: 12px 14px;
+      border-radius: 18px;
+      border: 1px solid rgba(121,215,255,.16);
+      background: rgba(121,215,255,.045);
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    @media (max-width: 980px) {
+      body { padding: 12px; }
+      .hero { grid-template-columns: 1fr; }
+      .storage-card { min-width: 0; }
+      .v1-row, .v2-row, .v3-main, .v4-row { grid-template-columns: 1fr; }
+      .v1-row, .v2-row, .v4-row { min-height: 0; }
+      .v3-more { grid-template-columns: 1fr; }
+      .score { min-width: 0; border-radius: 16px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <div>
+        <h1>4 компактных варианта строки proxy monitor</h1>
+        <p>Цель: использовать свободную ширину, сократить высоту, оставить явными только решения оператора: кто, сколько тратит, активность, риск, маршрут.</p>
+      </div>
+      <aside class="storage-card">
+        <h2>Prompt storage сейчас</h2>
+        <div class="storage-grid">
+          <div><span>у ключа 152db7</span><strong>1.6k</strong></div>
+          <div><span>сырой текст</span><strong>37.65 MB</strong></div>
+          <div><span>вся таблица</span><strong>179 MB</strong></div>
+        </div>
+        <p>В строке лучше показывать count + MB вместе: <b class="gold">1.6k prompts · 37.7 MB</b>. Полный список tags можно убирать в tooltip/modal.</p>
+      </aside>
+    </section>
+
+    <section class="variant">
+      <div class="variant-head">
+        <h2>Variant 1 — 2 широкие карточки + короткий route rail</h2>
+        <small>Высота около 104px; самый близкий к текущему виду, но меньше переносов.</small>
+      </div>
+      <div class="row-shell v1-row">
+        <div class="identity-card">
+          <code>..152db7</code>
+          <span class="muted mono">codex-tui 0.130.0</span>
+          <span class="model-live mono">gpt-5.5 · 4 active</span>
+          <span class="dim mono">1h: gpt-5.5</span>
+          <div class="tags">
+            <span class="chip gold">capture on · 1.6k · 37.7 MB</span>
+            <span class="chip red">2 risk tags</span>
+          </div>
+        </div>
+        <div class="crm-mini">
+          <div class="crm-top"><span class="crm-mail truncate">dame_dolla@mail.ru</span><span class="chip green">active</span><span class="chip cyan">DIGISELLER</span></div>
+          <div class="line"><span class="chip green mono">cr_904...2db7</span><span class="chip">unknown -> $3000</span><span class="chip">#291061446</span></div>
+          <div class="line"><b>4 225.57 $ / 6 000.00 $</b><b class="green">70%</b><b class="gold">today 21.32 $</b></div>
+          <div class="progress"><span class="bar"></span></div>
+          <div class="line dim"><span>sync 33m ago</span><span>expires 23 Jun 2026</span></div>
+        </div>
+        <div class="v1-metrics">
+          <div class="route-compact"><span>🇷🇺 Tyumen</span><strong class="mono">95.27.215.x</strong><span class="dim">ASN hidden</span></div>
+          <div class="mini-metrics">
+            <div class="metric"><span>10m</span><strong>12.47s</strong></div>
+            <div class="metric"><span>1h</span><strong>20.03s</strong></div>
+            <div class="metric"><span>Warn</span><strong>6/6/21</strong></div>
+          </div>
+        </div>
+        <div class="score">32<small>credential theft</small></div>
+      </div>
+    </section>
+
+    <section class="variant">
+      <div class="variant-head">
+        <h2>Variant 2 — плитки по смыслу</h2>
+        <small>Лучше всего, если надо быстро сравнивать ключи. Неявные tags сведены в счетчики.</small>
+      </div>
+      <div class="row-shell v2-row">
+        <div class="tile">
+          <span class="tile-title">Key / Client</span>
+          <div class="tile-main mono gold">..152db7 · gpt-5.5</div>
+          <div class="tile-sub truncate">codex-tui 0.130.0 · 4 active · 1h same model</div>
+        </div>
+        <div class="tile">
+          <span class="tile-title">Buyer / Balance</span>
+          <div class="tile-main truncate">dame_dolla@mail.ru</div>
+          <div class="tile-sub"><b>4 225.57 $</b> / 6 000 $ · <b class="gold">today 21.32 $</b></div>
+          <div class="progress"><span class="bar"></span></div>
+        </div>
+        <div class="tile">
+          <span class="tile-title">Route</span>
+          <div class="tile-main">🇷🇺 Tyumen</div>
+          <div class="tile-sub mono">95.27.215.x · ASN -</div>
+        </div>
+        <div class="tile">
+          <span class="tile-title">Health</span>
+          <div class="mini-metrics">
+            <div class="metric"><span>10m</span><strong>12.47s</strong></div>
+            <div class="metric"><span>1h</span><strong>20.03s</strong></div>
+            <div class="metric"><span>W</span><strong>21</strong></div>
+          </div>
+        </div>
+        <div class="tile">
+          <span class="tile-title">Score</span>
+          <div class="tile-main red">32</div>
+          <div class="tile-sub">credential theft</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="variant">
+      <div class="variant-head">
+        <h2>Variant 3 — тонкая table row + details strip</h2>
+        <small>Самая компактная строка. Второй ряд можно показывать только hover/expanded.</small>
+      </div>
+      <div class="row-shell v3-row">
+        <div class="v3-main">
+          <div class="truncate"><code class="gold mono">..152db7</code> <span class="muted">codex-tui</span><br><b class="mono">gpt-5.5 · 4 active</b></div>
+          <div class="truncate"><b>dame_dolla@mail.ru</b><br><span class="muted">cr_904...2db7 · active · DIGISELLER</span></div>
+          <div><b>4 225.57 $ / 6 000 $</b> <b class="green">70%</b><br><span class="gold">today 21.32 $</span> <span class="muted">· sync 33m</span></div>
+          <div class="metric"><span>Route</span><strong>🇷🇺 Tyumen</strong></div>
+          <div class="metric"><span>IP</span><strong>95.27.x</strong></div>
+          <div class="metric"><span>Avg</span><strong>12.47s</strong></div>
+          <div class="score">32<small>risk</small></div>
+        </div>
+        <div class="v3-more">
+          <span>Спрятанные детали: history 1h, expires, order id, ASN, warnings by window.</span>
+          <div class="tags"><span class="chip gold">1.6k prompts · 37.7 MB</span><span class="chip red">cyber-watch</span><span class="chip red">credential-risk</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="variant">
+      <div class="variant-head">
+        <h2>Variant 4 — risk-first карточка</h2>
+        <small>Если главное — реагировать на плохие ключи. Score и причина вынесены рядом с route.</small>
+      </div>
+      <div class="row-shell v4-row">
+        <div class="identity-card">
+          <code>..152db7</code>
+          <span class="model-live mono">gpt-5.5 · 4 active now</span>
+          <span class="chip gold">prompts 1.6k · 37.7 MB</span>
+          <span class="dim">tags collapsed: +4</span>
+        </div>
+        <div class="crm-mini">
+          <div class="crm-top"><span class="crm-mail truncate">dame_dolla@mail.ru</span><span class="chip green">active</span></div>
+          <div class="line"><span class="chip green mono">cr_904...2db7</span><span class="chip cyan">DIGISELLER</span><span class="chip">#291061446</span></div>
+          <div class="line"><b>4 225.57 $ / 6 000 $</b><b class="green">70%</b><b class="gold">today 21.32 $</b></div>
+          <div class="progress"><span class="bar"></span></div>
+        </div>
+        <div class="route-pills">
+          <span class="chip">🇷🇺 Tyumen</span><span class="chip mono">95.27.215.x</span><span class="chip">ASN -</span><span class="chip">10m 12.47s</span><span class="chip">1h 20.03s</span>
+        </div>
+        <div class="risk-card">
+          <div class="risk-dot">32</div>
+          <div><b class="red">credential theft</b><br><span class="muted">warnings 6/6/21<br>high severity</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="note">
+      <b>Что бы я выбрал:</b> Variant 2 для основной таблицы, потому что он превращает строку в читаемые смысловые блоки и хорошо использует ширину. Variant 3 — если нужна максимальная плотность: второй strip можно раскрывать только при hover/click.
+    </section>
+  </main>
+</body>
+</html>

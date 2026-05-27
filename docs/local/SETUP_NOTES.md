@@ -330,3 +330,8 @@ This mode keeps the data in project directories, which simplifies backup, migrat
 - Temporary Nginx backup server files from `sites-enabled` were moved to `/etc/nginx/sites-backups`, removing duplicate `server_name` warnings from `nginx -t`.
 - Rollback path: switch both Nginx site files from `127.0.0.1:3132` back to `127.0.0.1:3131`, run `nginx -t && systemctl reload nginx`, then keep or stop the daily-spend service after active streams drain.
 - Validation passed: `go test ./...`, `go build`, `npm run build`, production frontend deploy, `nginx -t`, public `/healthz` returns `2026-05-27.7`, public telemetry returns `2026-05-27.7`, and Playwright admin smoke found visible `today` CRM spend rows with widened summary/route grid columns and no page errors.
+
+## 2026-05-27 Route Row Compact Prototype
+- Added standalone UX prototype `docs/local/stats-widget-prototypes/proxy-route-row-compact-variants.html` with four compact route-row layout variants for the hidden proxy monitor.
+- Deployed the prototype to `https://statistics.gptclaudegemini.xyz/proxy-route-row-compact-variants.html`.
+- The prototype uses live prompt-storage observations for the active `152db7` key: `1608` prompt rows and about `37.653 MB` of stored user prompt text at the time of inspection.
