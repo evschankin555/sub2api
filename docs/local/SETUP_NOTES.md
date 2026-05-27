@@ -335,3 +335,12 @@ This mode keeps the data in project directories, which simplifies backup, migrat
 - Added standalone UX prototype `docs/local/stats-widget-prototypes/proxy-route-row-compact-variants.html` with four compact route-row layout variants for the hidden proxy monitor.
 - Deployed the prototype to `https://statistics.gptclaudegemini.xyz/proxy-route-row-compact-variants.html`.
 - The prototype uses live prompt-storage observations for the active `152db7` key: `1608` prompt rows and about `37.653 MB` of stored user prompt text at the time of inspection.
+
+## 2026-05-27 Prompt MB And Variant 4 Route Rows
+- `ai-route-proxy` upgraded to version `2026-05-27.8`; admin telemetry now adds per-key prompt storage fields: `promptTraceContentMb24h`, `promptTraceContentMb14d`, `promptTraceAvgBytes24h`, and `promptTraceMaxBytes24h`.
+- MariaDB table `proxy_prompt_trace_events` now has `prompt_bytes` so telemetry sums prompt size without re-reading `MEDIUMTEXT` on every refresh. Existing rows were backfilled during rollout; new rows write byte size at insert time.
+- Live service is `ai-route-proxy-prompt-mb.service` on `127.0.0.1:3133`; Nginx routes for `ai.gptclaudegemini.xyz` and `statistics.gptclaudegemini.xyz/api/proxy/telemetry` now point to `3133`. The previous `ai-route-proxy-daily-spend.service` on `3132` remains active for rollback.
+- The hidden statistics monitor now uses the selected Variant 4 row: richer key/model tile, preserved CRM/balance tile, expiry chip in the top-right of the CRM tile, compact route/latency tile, and smaller warning/score tile.
+- Updated and redeployed the standalone prototype at `https://statistics.gptclaudegemini.xyz/proxy-route-row-compact-variants.html` so Variant 4 reflects the selected layout.
+- Rollback path: switch both Nginx site files from `127.0.0.1:3133` back to `127.0.0.1:3132`, run `nginx -t && systemctl reload nginx`, then keep or stop the prompt-mb service after active streams drain.
+- Validation passed: `go test ./...`, `go build`, `npm run build`, public `/healthz` returns `2026-05-27.8`, public telemetry returns `2026-05-27.8`, admin telemetry returns prompt MB fields in about 4s via Nginx, and Playwright found Variant 4 rows with expiry/prompt-MB/warning cards and no page errors.

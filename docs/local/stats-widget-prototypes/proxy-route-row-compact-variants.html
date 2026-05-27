@@ -276,7 +276,11 @@
       border-radius: 16px;
       border: 1px solid rgba(255,122,104,.22);
       background: rgba(255,122,104,.08);
+      font-size: 12px;
+      line-height: 1.25;
     }
+    .risk-card b { font-size: 13px; }
+    .risk-card .muted { font-size: 11px; }
     .risk-dot {
       width: 54px;
       height: 54px;
@@ -289,6 +293,7 @@
       font-weight: 950;
     }
     .route-pills { display: flex; flex-wrap: wrap; gap: 6px; align-content: center; }
+    .crm-title-line { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; align-items: center; }
 
     .note {
       padding: 12px 14px;
@@ -431,13 +436,16 @@
       <div class="row-shell v4-row">
         <div class="identity-card">
           <code>..152db7</code>
-          <span class="model-live mono">gpt-5.5 · 4 active now</span>
-          <span class="chip gold">prompts 1.6k · 37.7 MB</span>
+          <span class="muted mono">codex-tui 0.130.0</span>
+          <span class="model-live mono">active now: gpt-5.5 · 4 streams</span>
+          <span class="dim mono">history 1h: gpt-5.5 · 124 req</span>
+          <div class="tags"><span class="chip green">gpt-5.5 now</span><span class="chip gold">prompts 1.6k · 37.7 MB</span></div>
           <span class="dim">tags collapsed: +4</span>
         </div>
         <div class="crm-mini">
-          <div class="crm-top"><span class="crm-mail truncate">dame_dolla@mail.ru</span><span class="chip green">active</span></div>
-          <div class="line"><span class="chip green mono">cr_904...2db7</span><span class="chip cyan">DIGISELLER</span><span class="chip">#291061446</span></div>
+          <div class="crm-title-line"><span class="crm-mail truncate">dame_dolla@mail.ru</span><span class="chip gold">expires 23 Jun 2026</span></div>
+          <div class="crm-top"><span class="chip green">active</span><span class="chip cyan">DIGISELLER</span><span class="chip">#291061446</span></div>
+          <div class="line"><span class="chip green mono">cr_904...2db7</span><span class="chip">unknown -> $3000</span></div>
           <div class="line"><b>4 225.57 $ / 6 000 $</b><b class="green">70%</b><b class="gold">today 21.32 $</b></div>
           <div class="progress"><span class="bar"></span></div>
         </div>
@@ -452,7 +460,7 @@
     </section>
 
     <section class="note">
-      <b>Что бы я выбрал:</b> Variant 2 для основной таблицы, потому что он превращает строку в читаемые смысловые блоки и хорошо использует ширину. Variant 3 — если нужна максимальная плотность: второй strip можно раскрывать только при hover/click.
+      <b>Выбранный вариант:</b> Variant 4 как рабочая строка: модели остаются насыщенными как в Variant 1, баланс сохраняет структуру Variant 2, expiry вынесен в правый верхний угол CRM-плитки, warning-плитка стала компактнее.
     </section>
   </main>
 </body>
