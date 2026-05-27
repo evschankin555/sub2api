@@ -344,3 +344,9 @@ This mode keeps the data in project directories, which simplifies backup, migrat
 - Updated and redeployed the standalone prototype at `https://statistics.gptclaudegemini.xyz/proxy-route-row-compact-variants.html` so Variant 4 reflects the selected layout.
 - Rollback path: switch both Nginx site files from `127.0.0.1:3133` back to `127.0.0.1:3132`, run `nginx -t && systemctl reload nginx`, then keep or stop the prompt-mb service after active streams drain.
 - Validation passed: `go test ./...`, `go build`, `npm run build`, public `/healthz` returns `2026-05-27.8`, public telemetry returns `2026-05-27.8`, admin telemetry returns prompt MB fields in about 4s via Nginx, and Playwright found Variant 4 rows with expiry/prompt-MB/warning cards and no page errors.
+
+## 2026-05-27 Prompt Storage Header Card
+- Added the compact `Prompt storage сейчас` card to the top of the hidden proxy monitor after admin unlock.
+- The card shows the busiest prompt key count, raw text MB for that key, and a total MB fallback across keys in the monitor when the heavier DB-size summary is not returned fast enough.
+- The row hint stays aligned with the selected Variant 4 layout: count + MB are shown together and tags remain collapsed for modal/tooltip use.
+- Source was updated in `D:\cursor\ccg-stats-mini-frontend`, built with `npm run build`, deployed to `/var/www/statistics.gptclaudegemini.xyz`, and verified with Playwright. Screenshot: `D:\cursor\sub2api-base\output\playwright\proxy-monitor-prompt-storage-header.png`.
