@@ -294,3 +294,12 @@ This mode keeps the data in project directories, which simplifies backup, migrat
 - Prompt content capture remains targeted and opt-in per key. It starts only after pressing the button, stores future user-authored prompt text for that key only, and keeps the existing redaction/no-headers/no-raw-token rules.
 - The existing lower `Prompt trace` panel still shows captured prompt events, active session status, duration, max prompt count, reason, restart, and stop controls.
 - Validation passed: `npm run build`, production frontend deploy, and Playwright smoke confirmed the row hint, modal callout, start buttons, and no console errors.
+
+## 2026-05-27 Prompt Trace Default Capture
+- `ai-route-proxy` upgraded to version `2026-05-27.4` and now runs with `PROMPT_TRACE_DEFAULT_ENABLED=true` in `/opt/ai-route-proxy/.env.default-trace`.
+- Future user-authored prompt text is captured by default for all proxy keys. The same privacy controls remain in place: secret redaction, no headers, no Authorization, no raw proxy/upstream keys, no full IPs, content cap, and telemetry retention.
+- Admins can pause capture per key from the hidden monitor key modal. Paused keys are excluded until the admin resumes/restarts capture.
+- Default capture uses `session_id=0` in `proxy_prompt_trace_events`; targeted sessions still use rows in `proxy_prompt_trace_sessions` and remain available for explicit restart/max-event workflows.
+- Live service is `ai-route-proxy-default-trace.service` on `127.0.0.1:3128`; Nginx routes for `ai.gptclaudegemini.xyz` and `statistics.gptclaudegemini.xyz/api/proxy/telemetry` now point to `3128`. The previous `ai-route-proxy-crm-link.service` on `3127` remains active as rollback.
+- Rollback path: switch both Nginx site files from `127.0.0.1:3128` back to `127.0.0.1:3127`, run `nginx -t && systemctl reload nginx`, then keep or stop the default-trace service after active streams drain.
+- Validation passed: `go test ./...`, local prompt-capture smoke confirmed `session_id=0`, pause smoke confirmed paused keys are not captured, public `/healthz` returns `2026-05-27.4`, public telemetry returns `2026-05-27.4`, `npm run build`, production frontend deploy, and Playwright smoke confirmed default-capture badges plus pause controls.
