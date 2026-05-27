@@ -288,3 +288,9 @@ This mode keeps the data in project directories, which simplifies backup, migrat
 - Live service is `ai-route-proxy-crm-link.service` on `127.0.0.1:3127`; Nginx routes for `ai.gptclaudegemini.xyz` and `statistics.gptclaudegemini.xyz/api/proxy/telemetry` now point to `3127`. The previous `ai-route-proxy-model-block.service` on `3126` remains active as rollback.
 - Rollback path: switch both Nginx site files from `127.0.0.1:3127` back to `127.0.0.1:3126`, run `nginx -t && systemctl reload nginx`, then keep or stop the CRM-link service after active streams drain.
 - Validation passed: `npm run build` for `ccg-stats-mini-frontend`, public `/healthz` returns `2026-05-27.3`, public telemetry omits CRM cards, admin telemetry returns CRM cards for linked keys, and the statistics frontend is deployed with telemetry CRM card support.
+
+## 2026-05-27 Prompt Trace UX Shortcut
+- The hidden admin monitor now shows a prompt-capture hint on each key row and a visible `start prompt capture` button at the top of the key modal, before the deeper security section.
+- Prompt content capture remains targeted and opt-in per key. It starts only after pressing the button, stores future user-authored prompt text for that key only, and keeps the existing redaction/no-headers/no-raw-token rules.
+- The existing lower `Prompt trace` panel still shows captured prompt events, active session status, duration, max prompt count, reason, restart, and stop controls.
+- Validation passed: `npm run build`, production frontend deploy, and Playwright smoke confirmed the row hint, modal callout, start buttons, and no console errors.
