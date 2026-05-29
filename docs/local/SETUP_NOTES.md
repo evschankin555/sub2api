@@ -140,6 +140,13 @@ This mode keeps the data in project directories, which simplifies backup, migrat
 - Route/model/CRM telemetry is unchanged; only prompt body storage and analysis jobs are off by default.
 - Re-enable only with an explicit operator decision; do not turn prompt capture back on silently during unrelated proxy work.
 
+## 2026-05-29 Sub2API Russian Locale Deploy
+- Committed the full Russian frontend locale baseline locally as `84a7769c` on branch `sub2api-base-local`.
+- Built and deployed image `sub2api-local:ru-antigravity-20260529` on `gptclaudegemini` from the committed worktree tarball.
+- Compose backup before image swap: `/opt/sub2api/docker-compose.local.yml.bak-20260529-*-pre-ru-commit`.
+- Only the `sub2api` container was recreated; PostgreSQL, Redis, and data directories were not recreated.
+- Validation passed: `sub2api` healthy, `http://127.0.0.1:8080/health` and `https://d.gptclaudegemini.xyz/health` return `{"status":"ok"}`.
+
 ## Deferred Items
 - Antigravity account onboarding after purchase
 - Seed data for channels and subscription plans
