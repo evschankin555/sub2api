@@ -1197,20 +1197,20 @@
           class="border-t border-gray-200 dark:border-dark-400 pt-4 mt-4 space-y-4"
         >
           <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
-            账号过滤控制
+            {{ t("admin.groups.accountFilter.title") }}
           </h4>
 
           <!-- require_oauth_only toggle -->
           <div class="flex items-center justify-between">
             <div>
               <label class="text-sm text-gray-600 dark:text-gray-400"
-                >仅允许 OAuth 账号</label
+                >{{ t("admin.groups.accountFilter.oauthOnly") }}</label
               >
               <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
                 {{
                   createForm.require_oauth_only
-                    ? "已启用 — 排除 API Key 类型账号"
-                    : "未启用"
+                    ? t("admin.groups.accountFilter.oauthOnlyEnabled")
+                    : t("admin.groups.accountFilter.disabled")
                 }}
               </p>
             </div>
@@ -1241,13 +1241,13 @@
           <div class="flex items-center justify-between">
             <div>
               <label class="text-sm text-gray-600 dark:text-gray-400"
-                >仅允许隐私保护已设置的账号</label
+                >{{ t("admin.groups.accountFilter.privacySetOnly") }}</label
               >
               <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
                 {{
                   createForm.require_privacy_set
-                    ? "已启用 — Privacy 未设置的账号将被排除"
-                    : "未启用"
+                    ? t("admin.groups.accountFilter.privacySetOnlyEnabled")
+                    : t("admin.groups.accountFilter.disabled")
                 }}
               </p>
             </div>
@@ -2378,20 +2378,20 @@
           class="border-t border-gray-200 dark:border-dark-400 pt-4 mt-4 space-y-4"
         >
           <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
-            账号过滤控制
+            {{ t("admin.groups.accountFilter.title") }}
           </h4>
 
           <!-- require_oauth_only toggle -->
           <div class="flex items-center justify-between">
             <div>
               <label class="text-sm text-gray-600 dark:text-gray-400"
-                >仅允许 OAuth 账号</label
+                >{{ t("admin.groups.accountFilter.oauthOnly") }}</label
               >
               <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
                 {{
                   editForm.require_oauth_only
-                    ? "已启用 — 排除 API Key 类型账号"
-                    : "未启用"
+                    ? t("admin.groups.accountFilter.oauthOnlyEnabled")
+                    : t("admin.groups.accountFilter.disabled")
                 }}
               </p>
             </div>
@@ -2422,13 +2422,13 @@
           <div class="flex items-center justify-between">
             <div>
               <label class="text-sm text-gray-600 dark:text-gray-400"
-                >仅允许隐私保护已设置的账号</label
+                >{{ t("admin.groups.accountFilter.privacySetOnly") }}</label
               >
               <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
                 {{
                   editForm.require_privacy_set
-                    ? "已启用 — Privacy 未设置的账号将被排除"
-                    : "未启用"
+                    ? t("admin.groups.accountFilter.privacySetOnlyEnabled")
+                    : t("admin.groups.accountFilter.disabled")
                 }}
               </p>
             </div>
@@ -3026,7 +3026,10 @@ const copyAccountsGroupOptions = computed(() => {
   );
   return eligibleGroups.map((g) => ({
     value: g.id,
-    label: `${g.name} (${g.account_count || 0} 个账号)`,
+    label: t("admin.groups.copyAccounts.accountCountLabel", {
+      name: g.name,
+      count: g.account_count || 0,
+    }),
   }));
 });
 
@@ -3041,7 +3044,10 @@ const copyAccountsGroupOptionsForEdit = computed(() => {
   );
   return eligibleGroups.map((g) => ({
     value: g.id,
-    label: `${g.name} (${g.account_count || 0} 个账号)`,
+    label: t("admin.groups.copyAccounts.accountCountLabel", {
+      name: g.name,
+      count: g.account_count || 0,
+    }),
   }));
 });
 

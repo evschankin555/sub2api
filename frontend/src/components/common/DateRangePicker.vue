@@ -236,7 +236,8 @@ const displayValue = computed(() => {
 
 const formatDate = (dateStr: string): string => {
   const date = new Date(dateStr + 'T00:00:00')
-  const dateLocale = locale.value === 'zh' ? 'zh-CN' : 'en-US'
+  const currentLocale = String(locale.value || '').toLowerCase()
+  const dateLocale = currentLocale.startsWith('zh') ? 'zh-CN' : currentLocale.startsWith('ru') ? 'ru-RU' : 'en-US'
   return date.toLocaleDateString(dateLocale, { month: 'short', day: 'numeric' })
 }
 

@@ -514,6 +514,7 @@ export default {
       wechatAvailabilityUnknown: 'WeChat sign-in availability could not be confirmed. Refresh and retry.',
       wechatSystemBrowserOnly: 'This WeChat sign-in flow is only available in your system browser.',
       wechatBrowserOnly: 'This WeChat sign-in flow is only available inside the WeChat browser.',
+      wechatNativeAppRequired: 'This site only has WeChat mobile app login configured. Continue from the native app through the WeChat SDK.',
       wechatNotConfigured: 'WeChat sign-in is not configured yet.'
     },
     linuxdoCallbackPageTitle: 'LinuxDo Sign-In Callback',
@@ -1960,6 +1961,14 @@ export default {
       accountsUnit: '',
       rateAndAccounts: '{rate}x rate · {count} accounts',
       accountsCount: '{count} accounts',
+      accountFilter: {
+        title: 'Account Filter Control',
+        oauthOnly: 'Allow OAuth accounts only',
+        oauthOnlyEnabled: 'Enabled — API Key accounts will be excluded',
+        privacySetOnly: 'Allow only accounts with privacy protection configured',
+        privacySetOnlyEnabled: 'Enabled — accounts without Privacy configured will be excluded',
+        disabled: 'Disabled'
+      },
       form: {
         name: 'Name',
         description: 'Description',
@@ -2097,6 +2106,7 @@ export default {
         noFallback: 'No Fallback'
       },
       copyAccounts: {
+        accountCountLabel: '{name} ({count} accounts)',
         title: 'Copy Accounts from Groups',
         tooltip: 'Select one or more groups of the same platform. After creation, all accounts from these groups will be automatically bound to the new group (deduplicated).',
         tooltipEdit: 'Select one or more groups of the same platform. After saving, current group accounts will be replaced with accounts from these groups (deduplicated).',
@@ -2211,6 +2221,8 @@ export default {
       updateError: 'Failed to update channel',
       deleteError: 'Failed to delete channel',
       nameRequired: 'Please enter a channel name',
+      noGroupsSelected: 'No group selected for {platform}. Select at least one group or disable this platform.',
+      emptyModelsInPricing: '{platform} has a pricing entry without models. Add a model or remove the entry.',
       duplicateModels: 'Model "{0}" appears in multiple pricing entries',
       modelConflict: "Model patterns '{model1}' and '{model2}' conflict: overlapping match range",
       mappingConflict: "Mapping source patterns '{model1}' and '{model2}' conflict: overlapping match range",
@@ -3376,14 +3388,23 @@ export default {
           builtInTitle: 'Built-in OAuth (Gemini CLI / Code Assist)',
           builtInDesc: 'Uses Google built-in client ID. No admin configuration required.',
           builtInRequirement: 'Requires a GCP project and Project ID.',
+          googleOneShort: 'Personal account',
+          googleOneDesc: 'Personal account with Google One subscription quota',
+          codeAssistDesc: 'Enterprise-grade, requires a GCP project',
+          codeAssistRequirement: 'Requires an active GCP project with a billing method attached',
           gcpProjectLink: 'Create project',
           customTitle: 'Custom OAuth (AI Studio OAuth)',
           customDesc: 'Uses admin-configured OAuth client for org management.',
           customRequirement: 'Admin must configure Client ID and add you as a test user.',
+          showAdvanced: 'Show advanced options (custom OAuth Client)',
+          hideAdvanced: 'Hide advanced options (custom OAuth Client)',
           badges: {
             recommended: 'Recommended',
+            recommendedPersonal: 'Recommended for personal users',
             highConcurrency: 'High concurrency',
             noAdmin: 'No admin setup',
+            noGcp: 'No GCP required',
+            enterpriseUser: 'Enterprise users',
             orgManaged: 'Org managed',
             adminRequired: 'Admin required'
           }
@@ -3402,6 +3423,7 @@ export default {
           },
           links: {
             countryCheck: 'Check country association',
+            changeCountryAssociation: 'Change country association',
             geminiWebActivation: 'Activate Gemini Web',
             gcpProject: 'Open GCP Console'
           }
@@ -4443,6 +4465,47 @@ export default {
           requestId: 'Request ID',
           actions: 'Actions'
         }
+      },
+      systemLogs: {
+        title: 'System Logs',
+        description: 'Newest logs are shown first. Supports filters, search, and conditional cleanup.',
+        allLevels: 'All',
+        loadFailed: 'Failed to load system logs',
+        runtimeSaved: 'Runtime log configuration applied',
+        runtimeSaveFailed: 'Failed to save log configuration',
+        rollbackConfirm: 'Rollback to startup log configuration (env/yaml) and apply immediately?',
+        rollbackSuccess: 'Rolled back to startup log configuration',
+        rollbackFailed: 'Failed to rollback log configuration',
+        cleanupConfirm: 'Clean system logs matching the current filters? This action cannot be undone.',
+        cleanupSuccess: 'Cleanup complete, deleted {count} logs',
+        cleanupFailed: 'Failed to clean system logs',
+        queue: 'Queue',
+        written: 'Written',
+        dropped: 'Dropped',
+        failed: 'Failed',
+        runtimeConfig: 'Runtime log configuration (applies immediately)',
+        level: 'Level',
+        stacktraceLevel: 'Stacktrace level',
+        samplingInitial: 'Sampling initial',
+        samplingThereafter: 'Sampling thereafter',
+        retentionDays: 'Retention days',
+        saveAndApply: 'Save and apply',
+        rollbackDefault: 'Rollback defaults',
+        lastWriteError: 'Last write error: ',
+        timeRange: 'Time range',
+        startTimeOptional: 'Start time (optional)',
+        endTimeOptional: 'End time (optional)',
+        component: 'Component',
+        componentPlaceholder: 'e.g. http.access',
+        platform: 'Platform',
+        model: 'Model',
+        keyword: 'Keyword',
+        keywordPlaceholder: 'message/request_id',
+        cleanupCurrentFilter: 'Clean current filter',
+        refreshHealth: 'Refresh health metrics',
+        empty: 'No system logs',
+        time: 'Time',
+        details: 'Log details'
       },
       alertEvents: {
         title: 'Alert Events',

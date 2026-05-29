@@ -59,28 +59,28 @@ const PAYMENT_VISIBLE_METHOD_SOURCE_OPTIONS: Record<
   PaymentVisibleMethodSourceOption[]
 > = {
   alipay: [
-    { value: "", labelZh: "未配置", labelEn: "Not configured" },
+    { value: "", labelZh: "\u672A\u914D\u7F6E", labelEn: "Not configured" },
     {
       value: "official_alipay",
-      labelZh: "支付宝官方",
+      labelZh: "\u652F\u4ED8\u5B9D\u5B98\u65B9",
       labelEn: "Official Alipay",
     },
     {
       value: "easypay_alipay",
-      labelZh: "易支付支付宝",
+      labelZh: "\u6613\u652F\u4ED8\u652F\u4ED8\u5B9D",
       labelEn: "EasyPay Alipay",
     },
   ],
   wxpay: [
-    { value: "", labelZh: "未配置", labelEn: "Not configured" },
+    { value: "", labelZh: "\u672A\u914D\u7F6E", labelEn: "Not configured" },
     {
       value: "official_wxpay",
-      labelZh: "微信官方",
+      labelZh: "\u5FAE\u4FE1\u5B98\u65B9",
       labelEn: "Official WeChat Pay",
     },
     {
       value: "easypay_wxpay",
-      labelZh: "易支付微信",
+      labelZh: "\u6613\u652F\u4ED8\u5FAE\u4FE1",
       labelEn: "EasyPay WeChat Pay",
     },
   ],
@@ -108,15 +108,15 @@ const PAYMENT_VISIBLE_METHOD_SOURCE_ALIASES: Record<
   },
 };
 const WECHAT_CONNECT_MODE_OPTIONS: WeChatConnectModeOption[] = [
-  { value: "open", labelZh: "PC 应用", labelEn: "PC App" },
+  { value: "open", labelZh: "PC \u5E94\u7528", labelEn: "PC App" },
   {
     value: "mp",
-    labelZh: "公众号",
+    labelZh: "\u516C\u4F17\u53F7",
     labelEn: "Official Account",
   },
   {
     value: "mobile",
-    labelZh: "移动应用",
+    labelZh: "\u79FB\u52A8\u5E94\u7528",
     labelEn: "Mobile App",
   },
 ];

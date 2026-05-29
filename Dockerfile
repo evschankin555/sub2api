@@ -21,15 +21,16 @@ FROM ${NODE_IMAGE} AS frontend-builder
 WORKDIR /app/frontend
 
 # Install pnpm
-RUN corepack enable && corepack prepare pnpm@latest --activate
+RUN corepack enable && corepack prepare pnpm@10.23.0 --activate && pnpm config set strict-dep-builds false
 
 # Install dependencies first (better caching)
 COPY frontend/package.json frontend/pnpm-lock.yaml ./
-RUN pnpm install --frozen-lockfile
+RUN pnpm install --frozen-lockfile --config.strict-dep-builds=false
 
-# Copy frontend source and build
+# Copy frontend source and build. The Docker image build runs Vite only; typecheck
+# remains available through the package script and CI/test commands.
 COPY frontend/ ./
-RUN pnpm run build
+RUN VITE_PLUGIN_CHECKER_ENABLE_BUILD=false pnpm exec vite build
 
 # -----------------------------------------------------------------------------
 # Stage 2: Backend Builder
@@ -66,10 +67,11 @@ COPY --from=frontend-builder /app/backend/internal/web/dist ./internal/web/dist
 RUN VERSION_VALUE="${VERSION}" && \
     if [ -z "${VERSION_VALUE}" ]; then VERSION_VALUE="$(tr -d '\r\n' < ./cmd/server/VERSION)"; fi && \
     DATE_VALUE="${DATE:-$(date -u +%Y-%m-%dT%H:%M:%SZ)}" && \
-    CGO_ENABLED=0 GOOS=linux go build \
+    CGO_ENABLED=0 GOOS=linux GOMAXPROCS=1 GOMEMLIMIT=1536MiB GOGC=25 go build \
     -tags embed \
     -ldflags="-s -w -X main.Version=${VERSION_VALUE} -X main.Commit=${COMMIT} -X main.Date=${DATE_VALUE} -X main.BuildType=release" \
     -trimpath \
+    -p=1 \
     -o /app/sub2api \
     ./cmd/server
 

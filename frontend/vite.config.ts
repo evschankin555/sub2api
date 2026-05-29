@@ -44,7 +44,8 @@ export default defineConfig(({ mode }) => {
     plugins: [
       vue(),
       checker({
-        vueTsc: true
+        vueTsc: true,
+        enableBuild: env.VITE_PLUGIN_CHECKER_ENABLE_BUILD !== 'false'
       }),
       injectPublicSettings(backendUrl)
     ],

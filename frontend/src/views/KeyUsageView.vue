@@ -631,7 +631,7 @@ const detailRows = computed<DetailRow[]>(() => {
       })
     }
     if (data.rate_limits) {
-      const windowMap: Record<string, string> = { '5h': '5H', '1d': locale.value === 'zh' ? '日' : 'D', '7d': '7D' }
+      const windowMap: Record<string, string> = { '5h': '5H', '1d': periodLabel('day'), '7d': '7D' }
       for (const rl of data.rate_limits) {
         const pct = rl.limit > 0 ? (rl.used / rl.limit) * 100 : 0
         let valueStr = `${usd(rl.used)} / ${usd(rl.limit)}`
@@ -659,21 +659,21 @@ const detailRows = computed<DetailRow[]>(() => {
         const pct = (sub.daily_usage_usd / sub.daily_limit_usd) * 100
         rows.push({
           iconBg: 'bg-primary-500/10', iconColor: 'text-primary-500', iconSvg: ICON_DOLLAR,
-          label: `${t('keyUsage.usedQuota')} (${locale.value === 'zh' ? '日' : 'D'})`, value: `${usd(sub.daily_usage_usd)} / ${usd(sub.daily_limit_usd)}`, valueClass: getUsageColor(pct),
+          label: `${t('keyUsage.usedQuota')} (${periodLabel('day')})`, value: `${usd(sub.daily_usage_usd)} / ${usd(sub.daily_limit_usd)}`, valueClass: getUsageColor(pct),
         })
       }
       if (sub.weekly_limit_usd > 0) {
         const pct = (sub.weekly_usage_usd / sub.weekly_limit_usd) * 100
         rows.push({
           iconBg: 'bg-indigo-500/10', iconColor: 'text-indigo-500', iconSvg: ICON_DOLLAR,
-          label: `${t('keyUsage.usedQuota')} (${locale.value === 'zh' ? '周' : 'W'})`, value: `${usd(sub.weekly_usage_usd)} / ${usd(sub.weekly_limit_usd)}`, valueClass: getUsageColor(pct),
+          label: `${t('keyUsage.usedQuota')} (${periodLabel('week')})`, value: `${usd(sub.weekly_usage_usd)} / ${usd(sub.weekly_limit_usd)}`, valueClass: getUsageColor(pct),
         })
       }
       if (sub.monthly_limit_usd > 0) {
         const pct = (sub.monthly_usage_usd / sub.monthly_limit_usd) * 100
         rows.push({
           iconBg: 'bg-emerald-500/10', iconColor: 'text-emerald-500', iconSvg: ICON_DOLLAR,
-          label: `${t('keyUsage.usedQuota')} (${locale.value === 'zh' ? '月' : 'M'})`, value: `${usd(sub.monthly_usage_usd)} / ${usd(sub.monthly_limit_usd)}`, valueClass: getUsageColor(pct),
+          label: `${t('keyUsage.usedQuota')} (${periodLabel('month')})`, value: `${usd(sub.monthly_usage_usd)} / ${usd(sub.monthly_limit_usd)}`, valueClass: getUsageColor(pct),
         })
       }
       if (sub.expires_at) {
@@ -740,14 +740,35 @@ function usd(value: number | null | undefined): string {
 
 function fmtNum(val: number | null | undefined): string {
   if (val == null) return '-'
-  return val.toLocaleString()
+  return val.toLocaleString(dateLocale())
 }
 
 function formatDate(iso: string | null | undefined): string {
   if (!iso) return '-'
   const d = new Date(iso)
-  const loc = locale.value === 'zh' ? 'zh-CN' : 'en-US'
-  return d.toLocaleDateString(loc, { year: 'numeric', month: 'long', day: 'numeric' })
+  return d.toLocaleDateString(dateLocale(), { year: 'numeric', month: 'long', day: 'numeric' })
+}
+
+function currentLocaleCode(): string {
+  return String(locale.value || '').toLowerCase()
+}
+
+function dateLocale(): string {
+  const current = currentLocaleCode()
+  if (current.startsWith('zh')) return 'zh-CN'
+  if (current.startsWith('ru')) return 'ru-RU'
+  return 'en-US'
+}
+
+function periodLabel(period: 'day' | 'week' | 'month'): string {
+  const current = currentLocaleCode()
+  if (current.startsWith('zh')) {
+    return period === 'day' ? '\u65E5' : period === 'week' ? '\u5468' : '\u6708'
+  }
+  if (current.startsWith('ru')) {
+    return period === 'day' ? 'дн.' : period === 'week' ? 'нед.' : 'мес.'
+  }
+  return period === 'day' ? 'D' : period === 'week' ? 'W' : 'M'
 }
 
 // ==================== API Query ====================

@@ -1,19 +1,20 @@
 import { createI18n } from 'vue-i18n'
 
-type LocaleCode = 'en' | 'zh'
+type LocaleCode = 'en' | 'zh' | 'ru'
 
 type LocaleMessages = Record<string, any>
 
 const LOCALE_KEY = 'sub2api_locale'
-const DEFAULT_LOCALE: LocaleCode = 'en'
+const DEFAULT_LOCALE: LocaleCode = 'ru'
 
 const localeLoaders: Record<LocaleCode, () => Promise<{ default: LocaleMessages }>> = {
   en: () => import('./locales/en'),
-  zh: () => import('./locales/zh')
+  zh: () => import('./locales/zh'),
+  ru: () => import('./locales/ru')
 }
 
 function isLocaleCode(value: string): value is LocaleCode {
-  return value === 'en' || value === 'zh'
+  return value === 'en' || value === 'zh' || value === 'ru'
 }
 
 function getDefaultLocale(): LocaleCode {
@@ -25,6 +26,9 @@ function getDefaultLocale(): LocaleCode {
   const browserLang = navigator.language.toLowerCase()
   if (browserLang.startsWith('zh')) {
     return 'zh'
+  }
+  if (browserLang.startsWith('ru')) {
+    return 'ru'
   }
 
   return DEFAULT_LOCALE
@@ -85,7 +89,8 @@ export function getLocale(): LocaleCode {
 
 export const availableLocales = [
   { code: 'en', name: 'English', flag: '🇺🇸' },
-  { code: 'zh', name: '中文', flag: '🇨🇳' }
+  { code: 'zh', name: '\u4E2D\u6587', flag: '🇨🇳' },
+  { code: 'ru', name: 'Русский', flag: '🇷🇺' }
 ] as const
 
 export default i18n

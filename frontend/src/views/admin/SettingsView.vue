@@ -1684,12 +1684,12 @@
                     <div class="flex items-start justify-between gap-4">
                       <div>
                         <h3 class="font-medium text-gray-900 dark:text-white">
-                          {{ localText("PC 应用", "PC App") }}
+                          {{ localText("PC \u5E94\u7528", "PC App") }}
                         </h3>
                         <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
                           {{
                             localText(
-                              "桌面浏览器通过微信开放平台扫码登录。可与公众号或移动应用同时存在。",
+                              "\u684C\u9762\u6D4F\u89C8\u5668\u901A\u8FC7\u5FAE\u4FE1\u5F00\u653E\u5E73\u53F0\u626B\u7801\u767B\u5F55。\u53EF\u4E0E\u516C\u4F17\u53F7\u6216\u79FB\u52A8\u5E94\u7528\u540C\u65F6\u5B58\u5728。",
                               "Desktop browsers sign in through WeChat Open Platform QR login. This can coexist with Official Account or Mobile App.",
                             )
                           }}
@@ -1718,7 +1718,7 @@
                           class="input font-mono text-sm"
                           :placeholder="
                             localText(
-                              '微信开放平台 PC 应用 AppID',
+                              '\u5FAE\u4FE1\u5F00\u653E\u5E73\u53F0 PC \u5E94\u7528 AppID',
                               'WeChat Open Platform PC App ID',
                             )
                           "
@@ -1738,11 +1738,11 @@
                           :placeholder="
                             form.wechat_connect_open_app_secret_configured
                               ? localText(
-                                  '密钥已配置，留空以保留当前值。',
+                                  '\u5BC6\u94A5\u5DF2\u914D\u7F6E，\u7559\u7A7A\u4EE5\u4FDD\u7559\u5F53\u524D\u503C。',
                                   'Secret configured. Leave empty to keep the current value.',
                                 )
                               : localText(
-                                  '微信开放平台 PC 应用 AppSecret',
+                                  '\u5FAE\u4FE1\u5F00\u653E\u5E73\u53F0 PC \u5E94\u7528 AppSecret',
                                   'WeChat Open Platform PC App Secret',
                                 )
                           "
@@ -1757,12 +1757,12 @@
                     <div class="flex items-start justify-between gap-4">
                       <div>
                         <h3 class="font-medium text-gray-900 dark:text-white">
-                          {{ localText("公众号", "Official Account") }}
+                          {{ localText("\u516C\u4F17\u53F7", "Official Account") }}
                         </h3>
                         <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
                           {{
                             localText(
-                              "仅在微信内浏览器可用；非微信环境下会显示不可用。",
+                              "\u4EC5\u5728\u5FAE\u4FE1\u5185\u6D4F\u89C8\u5668\u53EF\u7528；\u975E\u5FAE\u4FE1\u73AF\u5883\u4E0B\u4F1A\u663E\u793A\u4E0D\u53EF\u7528。",
                               "Only available inside the WeChat browser. It is shown as unavailable outside WeChat.",
                             )
                           }}
@@ -1782,7 +1782,7 @@
                         <label
                           class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
                         >
-                          {{ localText("公众号 AppID", "Official Account App ID") }}
+                          {{ localText("\u516C\u4F17\u53F7 AppID", "Official Account App ID") }}
                         </label>
                         <input
                           v-model="form.wechat_connect_mp_app_id"
@@ -1791,7 +1791,7 @@
                           class="input font-mono text-sm"
                           :placeholder="
                             localText(
-                              '公众号 AppID',
+                              '\u516C\u4F17\u53F7 AppID',
                               'Official Account App ID',
                             )
                           "
@@ -1803,7 +1803,7 @@
                         >
                           {{
                             localText(
-                              "公众号 AppSecret",
+                              "\u516C\u4F17\u53F7 AppSecret",
                               "Official Account App Secret",
                             )
                           }}
@@ -1816,11 +1816,11 @@
                           :placeholder="
                             form.wechat_connect_mp_app_secret_configured
                               ? localText(
-                                  '密钥已配置，留空以保留当前值。',
+                                  '\u5BC6\u94A5\u5DF2\u914D\u7F6E，\u7559\u7A7A\u4EE5\u4FDD\u7559\u5F53\u524D\u503C。',
                                   'Secret configured. Leave empty to keep the current value.',
                                 )
                               : localText(
-                                  '公众号 AppSecret',
+                                  '\u516C\u4F17\u53F7 AppSecret',
                                   'Official Account App Secret',
                                 )
                           "
@@ -1835,12 +1835,12 @@
                     <div class="flex items-start justify-between gap-4">
                       <div>
                         <h3 class="font-medium text-gray-900 dark:text-white">
-                          {{ localText("移动应用", "Mobile App") }}
+                          {{ localText("\u79FB\u52A8\u5E94\u7528", "Mobile App") }}
                         </h3>
                         <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
                           {{
                             localText(
-                              "原生移动端通过微信 SDK 唤起授权，网页端不会直接发起该流程。",
+                              "\u539F\u751F\u79FB\u52A8\u7AEF\u901A\u8FC7\u5FAE\u4FE1 SDK \u5524\u8D77\u6388\u6743，\u7F51\u9875\u7AEF\u4E0D\u4F1A\u76F4\u63A5\u53D1\u8D77\u8BE5\u6D41\u7A0B。",
                               "Native mobile clients start authorization through the WeChat SDK. The web UI does not launch this flow directly.",
                             )
                           }}
@@ -1860,7 +1860,7 @@
                         <label
                           class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
                         >
-                          {{ localText("移动应用 AppID", "Mobile App ID") }}
+                          {{ localText("\u79FB\u52A8\u5E94\u7528 AppID", "Mobile App ID") }}
                         </label>
                         <input
                           v-model="form.wechat_connect_mobile_app_id"
@@ -1869,7 +1869,7 @@
                           class="input font-mono text-sm"
                           :placeholder="
                             localText(
-                              '移动应用 AppID',
+                              '\u79FB\u52A8\u5E94\u7528 AppID',
                               'Mobile App ID',
                             )
                           "
@@ -1879,7 +1879,7 @@
                         <label
                           class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
                         >
-                          {{ localText("移动应用 AppSecret", "Mobile App Secret") }}
+                          {{ localText("\u79FB\u52A8\u5E94\u7528 AppSecret", "Mobile App Secret") }}
                         </label>
                         <input
                           v-model="form.wechat_connect_mobile_app_secret"
@@ -1889,11 +1889,11 @@
                           :placeholder="
                             form.wechat_connect_mobile_app_secret_configured
                               ? localText(
-                                  '密钥已配置，留空以保留当前值。',
+                                  '\u5BC6\u94A5\u5DF2\u914D\u7F6E，\u7559\u7A7A\u4EE5\u4FDD\u7559\u5F53\u524D\u503C。',
                                   'Secret configured. Leave empty to keep the current value.',
                                 )
                               : localText(
-                                  '移动应用 AppSecret',
+                                  '\u79FB\u52A8\u5E94\u7528 AppSecret',
                                   'Mobile App Secret',
                                 )
                           "
@@ -1913,7 +1913,7 @@
                 >
                   {{
                     localText(
-                      "如果同时启用 PC 应用和公众号/移动应用，这些应用需要挂在同一个微信开放平台主体下，否则 UnionID 无法稳定归并账号。",
+                      "\u5982\u679C\u540C\u65F6\u542F\u7528 PC \u5E94\u7528\u548C\u516C\u4F17\u53F7/\u79FB\u52A8\u5E94\u7528，\u8FD9\u4E9B\u5E94\u7528\u9700\u8981\u6302\u5728\u540C\u4E00\u4E2A\u5FAE\u4FE1\u5F00\u653E\u5E73\u53F0\u4E3B\u4F53\u4E0B，\u5426\u5219 UnionID \u65E0\u6CD5\u7A33\u5B9A\u5F52\u5E76\u8D26\u53F7。",
                       "When PC App is enabled together with Official Account or Mobile App, they should belong to the same WeChat Open Platform account so UnionID can merge identities reliably.",
                     )
                   }}
@@ -1926,7 +1926,7 @@
                     >
                       {{
                         localText(
-                          "浏览器回调地址",
+                          "\u6D4F\u89C8\u5668\u56DE\u8C03\u5730\u5740",
                           "Browser Redirect URL",
                         )
                       }}
@@ -1941,7 +1941,7 @@
                     <p class="mt-1.5 text-xs text-gray-500 dark:text-gray-400">
                       {{
                         localText(
-                          "用于 PC 应用和公众号的网页回调。移动应用走原生 SDK 时不直接使用这个浏览器回调。",
+                          "\u7528\u4E8E PC \u5E94\u7528\u548C\u516C\u4F17\u53F7\u7684\u7F51\u9875\u56DE\u8C03。\u79FB\u52A8\u5E94\u7528\u8D70\u539F\u751F SDK \u65F6\u4E0D\u76F4\u63A5\u4F7F\u7528\u8FD9\u4E2A\u6D4F\u89C8\u5668\u56DE\u8C03。",
                           "Used by PC App and Official Account browser callbacks. Native mobile SDK flows do not start from this browser callback directly.",
                         )
                       }}
@@ -5552,7 +5552,7 @@ const paymentGuideHref = computed(() =>
 
 const paymentMethodsHref = computed(() =>
   locale.value.startsWith("zh")
-    ? "https://github.com/Wei-Shaw/sub2api/blob/main/docs/PAYMENT_CN.md#支持的支付方式"
+    ? "https://github.com/Wei-Shaw/sub2api/blob/main/docs/PAYMENT_CN.md#\u652F\u6301\u7684\u652F\u4ED8\u65B9\u5F0F"
     : "https://github.com/Wei-Shaw/sub2api/blob/main/docs/PAYMENT.md#supported-payment-methods",
 );
 
@@ -6602,7 +6602,7 @@ async function saveSettings() {
     if (form.wechat_connect_mp_enabled && form.wechat_connect_mobile_enabled) {
       appStore.showError(
         localText(
-          "公众号和移动应用不能同时启用。",
+          "\u516C\u4F17\u53F7\u548C\u79FB\u52A8\u5E94\u7528\u4E0D\u80FD\u540C\u65F6\u542F\u7528。",
           "Official Account and Mobile App cannot be enabled at the same time.",
         ),
       );

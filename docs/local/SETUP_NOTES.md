@@ -133,6 +133,13 @@ This mode keeps the data in project directories, which simplifies backup, migrat
 - Created or verified disabled channel placeholder `Antigravity Sandbox`, linked only to `Antigravity Default`, with empty model mapping and no model pricing rows.
 - No Antigravity account, provider secret, pricing rule, or channel enablement was added in this step.
 
+## 2026-05-29 Prompt Capture Decommission
+- Operator decision: stop accumulating user prompt text and disable async prompt analysis on `ai.gptclaudegemini.xyz`.
+- Live proxy env `/opt/ai-route-proxy/.env.prompt-mb` now sets `PROMPT_TRACE_DEFAULT_ENABLED=false` and `PROMPT_ANALYZER_ENABLED=false`; service `ai-route-proxy-prompt-mb.service` on `127.0.0.1:3133` remains the active route.
+- Historical prompt tables were archived to `/root/ai-route-proxy-prompt-archive-20260529-031855` with `SHA256SUMS.txt`, then truncated in MariaDB: `proxy_prompt_trace_events`, `proxy_prompt_trace_sessions`, `proxy_prompt_trace_pauses`, `proxy_prompt_analysis_results`.
+- Route/model/CRM telemetry is unchanged; only prompt body storage and analysis jobs are off by default.
+- Re-enable only with an explicit operator decision; do not turn prompt capture back on silently during unrelated proxy work.
+
 ## Deferred Items
 - Antigravity account onboarding after purchase
 - Seed data for channels and subscription plans
