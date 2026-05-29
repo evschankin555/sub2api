@@ -1,0 +1,767 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CCG Stats Compact Widget Variants</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@500;600;700;800&family=IBM+Plex+Mono:wght@400;500;700&family=Manrope:wght@500;600;700;800&display=swap');
+
+    :root {
+      --bg: #080d0c;
+      --ink: #eefcf6;
+      --muted: #8ca39c;
+      --soft: rgba(238, 252, 246, 0.08);
+      --line: rgba(108, 255, 199, 0.18);
+      --green: #63ffc2;
+      --green-2: #1fd999;
+      --cyan: #7ce1ff;
+      --amber: #ffc24a;
+      --red: #ff6877;
+      --panel: rgba(8, 18, 16, 0.88);
+      --panel-2: rgba(13, 24, 22, 0.96);
+      --mono: 'IBM Plex Mono', monospace;
+      --ui: Manrope, sans-serif;
+      --codex: 'Exo 2', sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      font-family: var(--ui);
+      background:
+        radial-gradient(circle at 20% 8%, rgba(99,255,194,.12), transparent 28%),
+        radial-gradient(circle at 85% 24%, rgba(124,225,255,.08), transparent 28%),
+        linear-gradient(135deg, #07100f, #0b1012 58%, #060708);
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(99,255,194,.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(99,255,194,.035) 1px, transparent 1px);
+      background-size: 36px 36px;
+      mask-image: linear-gradient(to bottom, black, transparent 88%);
+    }
+
+    .page {
+      position: relative;
+      width: min(1380px, calc(100vw - 44px));
+      margin: 0 auto;
+      padding: 38px 0 70px;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 360px;
+      gap: 22px;
+      align-items: end;
+      margin-bottom: 26px;
+    }
+
+    .kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+      color: var(--green);
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+
+    .kicker::before {
+      content: '';
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 26px var(--green);
+    }
+
+    h1 {
+      margin: 0;
+      max-width: 980px;
+      font-size: clamp(44px, 6vw, 88px);
+      line-height: .91;
+      letter-spacing: -.075em;
+    }
+
+    .hero p, .brief p {
+      margin: 14px 0 0;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.65;
+    }
+
+    .brief {
+      padding: 20px;
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      background: rgba(7, 15, 14, .72);
+      box-shadow: inset 0 1px rgba(255,255,255,.04);
+    }
+
+    .brief strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 15px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 20px;
+    }
+
+    .variant {
+      position: relative;
+      min-height: 430px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 32px;
+      background:
+        linear-gradient(140deg, rgba(7, 15, 14, .86), rgba(2, 6, 8, .9)),
+        radial-gradient(circle at 82% 12%, rgba(99,255,194,.12), transparent 34%);
+      box-shadow: 0 28px 90px rgba(0,0,0,.38), inset 0 1px rgba(255,255,255,.04);
+      overflow: hidden;
+    }
+
+    .variant-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+
+    .variant-title {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .num {
+      display: grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      border: 1px solid rgba(99,255,194,.22);
+      border-radius: 14px;
+      color: #06120f;
+      background: var(--green);
+      font-family: var(--mono);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .variant-title h2 {
+      margin: 0;
+      font-size: 20px;
+      letter-spacing: -.045em;
+    }
+
+    .variant-title span,
+    .size-tag {
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 11px;
+    }
+
+    .size-tag {
+      flex: 0 0 auto;
+      height: fit-content;
+      padding: 8px 10px;
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 999px;
+      background: rgba(255,255,255,.035);
+    }
+
+    .preview {
+      position: relative;
+      display: grid;
+      place-items: center;
+      min-height: 235px;
+      margin-bottom: 18px;
+      border: 1px solid rgba(255,255,255,.06);
+      border-radius: 24px;
+      background:
+        linear-gradient(rgba(99,255,194,.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(99,255,194,.035) 1px, transparent 1px),
+        rgba(2, 8, 8, .48);
+      background-size: 24px 24px;
+    }
+
+    .usage-note {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .usage-note div {
+      padding: 12px;
+      border: 1px solid rgba(255,255,255,.055);
+      border-radius: 15px;
+      background: rgba(255,255,255,.025);
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .usage-note strong {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--green);
+      font-family: var(--mono);
+      font-size: 10px;
+      text-transform: uppercase;
+    }
+
+    .nano-pill {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      width: 282px;
+      height: 40px;
+      padding: 6px 9px;
+      border: 1px solid rgba(99,255,194,.4);
+      border-radius: 999px;
+      background: rgba(4, 13, 12, .92);
+      box-shadow: 0 20px 70px rgba(0,0,0,.45), 0 0 28px rgba(99,255,194,.12);
+      font-family: var(--mono);
+    }
+
+    .logo-dot {
+      display: grid;
+      place-items: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 12px;
+      color: #04120f;
+      background: var(--green);
+      font-size: 10px;
+      font-weight: 700;
+    }
+
+    .nano-pill .value {
+      font-size: 13px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .nano-pill .muted {
+      color: var(--muted);
+      font-size: 10px;
+      white-space: nowrap;
+    }
+
+    .tiny-bar {
+      position: relative;
+      flex: 1;
+      height: 7px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: rgba(255,255,255,.08);
+    }
+
+    .tiny-bar::after {
+      content: '';
+      position: absolute;
+      inset: 0 58% 0 0;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--green), var(--cyan));
+    }
+
+    .slim-dock {
+      display: grid;
+      grid-template-columns: auto repeat(4, 1fr) auto;
+      align-items: center;
+      gap: 10px;
+      width: min(560px, 94%);
+      min-height: 58px;
+      padding: 10px 12px;
+      border: 1px solid rgba(99,255,194,.28);
+      border-radius: 20px;
+      background: rgba(5, 14, 13, .94);
+      box-shadow: 0 20px 80px rgba(0,0,0,.42);
+    }
+
+    .dock-icon {
+      display: grid;
+      place-items: center;
+      width: 38px;
+      height: 38px;
+      border-radius: 15px;
+      color: #04120f;
+      background: linear-gradient(135deg, var(--green), var(--cyan));
+      font-family: var(--mono);
+      font-weight: 700;
+    }
+
+    .dock-cell {
+      min-width: 0;
+      padding-left: 10px;
+      border-left: 1px solid rgba(99,255,194,.13);
+      font-family: var(--mono);
+    }
+
+    .dock-cell span {
+      display: block;
+      color: var(--muted);
+      font-size: 9px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .dock-cell strong {
+      display: block;
+      margin-top: 3px;
+      font-size: 12px;
+    }
+
+    .dock-open {
+      border: 0;
+      border-radius: 999px;
+      padding: 10px 12px;
+      color: #04120f;
+      background: var(--green);
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 700;
+    }
+
+    .corner-card {
+      width: 318px;
+      padding: 13px;
+      border: 1px solid rgba(99,255,194,.24);
+      border-radius: 22px;
+      background: rgba(4, 13, 12, .94);
+      box-shadow: 0 24px 90px rgba(0,0,0,.46);
+    }
+
+    .corner-top,
+    .drawer-top,
+    .codex-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .corner-top strong,
+    .drawer-top strong,
+    .codex-top strong {
+      font-size: 13px;
+    }
+
+    .state-pill {
+      padding: 6px 8px;
+      border-radius: 999px;
+      color: #04120f;
+      background: var(--green);
+      font-family: var(--mono);
+      font-size: 9px;
+      font-weight: 700;
+    }
+
+    .corner-metrics {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin: 12px 0;
+    }
+
+    .corner-metrics div {
+      padding: 10px;
+      border: 1px solid rgba(255,255,255,.06);
+      border-radius: 14px;
+      background: rgba(255,255,255,.025);
+      font-family: var(--mono);
+    }
+
+    .corner-metrics span {
+      display: block;
+      color: var(--muted);
+      font-size: 8px;
+      text-transform: uppercase;
+    }
+
+    .corner-metrics strong {
+      display: block;
+      margin-top: 5px;
+      color: var(--green);
+      font-size: 12px;
+    }
+
+    .mini-model {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 8px;
+      padding: 8px 2px;
+      border-top: 1px solid rgba(255,255,255,.06);
+      font-family: var(--mono);
+      font-size: 10px;
+    }
+
+    .mini-model span { color: var(--muted); }
+    .mini-model strong { color: var(--green); }
+
+    .drawer {
+      width: 360px;
+      min-height: 310px;
+      padding: 13px;
+      border: 1px solid rgba(99,255,194,.24);
+      border-radius: 24px;
+      background: rgba(4, 13, 12, .94);
+      box-shadow: 0 24px 90px rgba(0,0,0,.46);
+    }
+
+    .drawer-search {
+      margin: 12px 0;
+      padding: 11px;
+      border: 1px solid rgba(99,255,194,.16);
+      border-radius: 15px;
+      background: rgba(255,255,255,.025);
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 11px;
+    }
+
+    .drawer-list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .drawer-item {
+      display: grid;
+      grid-template-columns: 28px 1fr auto;
+      align-items: center;
+      gap: 9px;
+      padding: 9px;
+      border-radius: 14px;
+      background: rgba(255,255,255,.028);
+      font-family: var(--mono);
+      font-size: 10px;
+    }
+
+    .drawer-item.active {
+      outline: 1px solid rgba(99,255,194,.28);
+      background: rgba(99,255,194,.07);
+    }
+
+    .avatar {
+      display: grid;
+      place-items: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 11px;
+      color: var(--green);
+      background: rgba(99,255,194,.1);
+      font-weight: 700;
+    }
+
+    .drawer-item span {
+      color: var(--muted);
+    }
+
+    .codex-variant {
+      grid-column: 1 / -1;
+      min-height: 520px;
+      background:
+        radial-gradient(circle at 74% 14%, rgba(42, 42, 42, .86), transparent 29%),
+        radial-gradient(circle at 18% 84%, rgba(38, 38, 38, .74), transparent 30%),
+        linear-gradient(180deg, #17120c 0%, #0d0d0d 100%);
+      border-color: rgba(255, 194, 74, .16);
+      font-family: var(--codex);
+    }
+
+    .codex-variant .num {
+      color: var(--amber);
+      background: rgba(255,194,74,.09);
+      border-color: rgba(255,194,74,.24);
+    }
+
+    .codex-variant .preview {
+      min-height: 310px;
+      background: rgba(255,255,255,.018);
+      border-color: rgba(255,255,255,.08);
+      background-image: none;
+    }
+
+    .codex-widget {
+      display: grid;
+      grid-template-columns: 230px minmax(0, 1fr);
+      width: min(760px, 96%);
+      min-height: 270px;
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 24px;
+      background: rgba(23, 18, 12, .74);
+      box-shadow: 0 28px 90px rgba(0,0,0,.52), inset 0 1px rgba(255,255,255,.04);
+      overflow: hidden;
+    }
+
+    .codex-menu {
+      padding: 18px;
+      border-right: 1px solid rgba(255,255,255,.08);
+      background: rgba(0,0,0,.12);
+    }
+
+    .codex-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 7px 10px;
+      border: 1px solid rgba(255,194,74,.24);
+      border-radius: 999px;
+      color: var(--amber);
+      background: rgba(255,194,74,.08);
+      font-family: var(--mono);
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .codex-menu h3 {
+      margin: 16px 0 12px;
+      font-size: 18px;
+    }
+
+    .codex-menu a {
+      display: block;
+      margin-bottom: 8px;
+      padding: 10px 11px;
+      border: 1px solid rgba(255,255,255,.07);
+      border-radius: 12px;
+      color: #c9c0ae;
+      text-decoration: none;
+      font-size: 12px;
+      background: rgba(255,255,255,.025);
+    }
+
+    .codex-body {
+      padding: 18px;
+    }
+
+    .codex-top h3 {
+      margin: 0;
+      font-size: 22px;
+      letter-spacing: -.04em;
+    }
+
+    .codex-copy {
+      margin: 10px 0 16px;
+      color: #bdb4a5;
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    .codex-stat-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .codex-stat {
+      padding: 12px;
+      border: 1px solid rgba(255,255,255,.07);
+      border-radius: 15px;
+      background: rgba(255,255,255,.025);
+    }
+
+    .codex-stat span {
+      display: block;
+      color: #8f8678;
+      font-family: var(--mono);
+      font-size: 9px;
+      text-transform: uppercase;
+    }
+
+    .codex-stat strong {
+      display: block;
+      margin-top: 7px;
+      color: #f5f1e8;
+      font-family: var(--mono);
+      font-size: 13px;
+    }
+
+    .codex-alert {
+      padding: 12px;
+      border-left: 3px solid var(--amber);
+      border-radius: 12px;
+      color: #d9d0c1;
+      background: rgba(255,194,74,.1);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .codex-button {
+      border: 0;
+      border-radius: 999px;
+      padding: 9px 12px;
+      color: #21180b;
+      background: var(--amber);
+      font-family: var(--codex);
+      font-weight: 800;
+    }
+
+    @media (max-width: 1060px) {
+      .hero, .grid { grid-template-columns: 1fr; }
+      .codex-widget { grid-template-columns: 1fr; }
+      .codex-menu { border-right: 0; border-bottom: 1px solid rgba(255,255,255,.08); }
+    }
+
+    @media (max-width: 660px) {
+      .page { width: min(100% - 22px, 1380px); }
+      .variant { padding: 14px; border-radius: 24px; }
+      .usage-note, .codex-stat-grid { grid-template-columns: 1fr; }
+      .slim-dock { grid-template-columns: auto 1fr auto; }
+      .slim-dock .dock-cell:nth-of-type(n+3) { display: none; }
+      .corner-card, .drawer, .nano-pill { width: 96%; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <div>
+        <span class="kicker">compact UX variants</span>
+        <h1>4 экономных режима плюс Codex-style skin.</h1>
+        <p>Здесь варианты именно по размеру и сценариям использования: от почти незаметного pill-индикатора до drawer-режима со списком email/token. Последний блок повторяет визуальный язык референса codex-only: теплый темный фон, янтарные акценты, крупные карточки и меню.</p>
+      </div>
+      <aside class="brief">
+        <strong>Как выбирать</strong>
+        <p>Если виджет должен жить постоянно поверх окон — бери Nano или Slim Dock. Если нужен быстрый просмотр моделей — Corner Card. Если главный сценарий — переключение между ключами — Drawer.</p>
+      </aside>
+    </section>
+
+    <section class="grid">
+      <article class="variant">
+        <header class="variant-head">
+          <div class="variant-title"><span class="num">1</span><div><h2>Nano Pill</h2><span>минимум места, всегда сверху</span></div></div>
+          <span class="size-tag">282 x 40 px</span>
+        </header>
+        <div class="preview">
+          <div class="nano-pill">
+            <div class="logo-dot">Σ</div>
+            <div><div class="value">$2.84</div><div class="muted">today</div></div>
+            <div class="tiny-bar"></div>
+            <div class="muted">18%</div>
+          </div>
+        </div>
+        <div class="usage-note">
+          <div><strong>Лучше для</strong>Постоянное отображение поверх окон: расход + лимит без отвлечения.</div>
+          <div><strong>Поведение</strong>Клик раскрывает Corner Card, правый клик открывает список ключей.</div>
+        </div>
+      </article>
+
+      <article class="variant">
+        <header class="variant-head">
+          <div class="variant-title"><span class="num">2</span><div><h2>Slim Dock</h2><span>полоска с 4 метриками</span></div></div>
+          <span class="size-tag">560 x 58 px</span>
+        </header>
+        <div class="preview">
+          <div class="slim-dock">
+            <div class="dock-icon">CCG</div>
+            <div class="dock-cell"><span>cost</span><strong>$2.84</strong></div>
+            <div class="dock-cell"><span>req</span><strong>1,284</strong></div>
+            <div class="dock-cell"><span>tokens</span><strong>2.9M</strong></div>
+            <div class="dock-cell"><span>limit</span><strong>18%</strong></div>
+            <button class="dock-open">OPEN</button>
+          </div>
+        </div>
+        <div class="usage-note">
+          <div><strong>Лучше для</strong>Нижняя полоска над taskbar, когда нужно видеть больше одной цифры.</div>
+          <div><strong>Поведение</strong>Можно закрепить слева/по центру/справа; авто-сворачивание через 5 секунд.</div>
+        </div>
+      </article>
+
+      <article class="variant">
+        <header class="variant-head">
+          <div class="variant-title"><span class="num">3</span><div><h2>Corner Card</h2><span>быстрый обзор моделей</span></div></div>
+          <span class="size-tag">318 x 190 px</span>
+        </header>
+        <div class="preview">
+          <div class="corner-card">
+            <div class="corner-top"><strong>admin@gpt...</strong><span class="state-pill">SYNC OK</span></div>
+            <div class="corner-metrics">
+              <div><span>cost</span><strong>$2.84</strong></div>
+              <div><span>req</span><strong>1.2K</strong></div>
+              <div><span>limit</span><strong>18%</strong></div>
+            </div>
+            <div class="mini-model"><span>claude-sonnet-4-5</span><strong>$1.74</strong></div>
+            <div class="mini-model"><span>gemini-2.5-pro</span><strong>$0.81</strong></div>
+            <div class="mini-model"><span>gpt-5.4-mini</span><strong>$0.29</strong></div>
+          </div>
+        </div>
+        <div class="usage-note">
+          <div><strong>Лучше для</strong>Короткий hover-preview из трея: уже видны топ-модели и расходы.</div>
+          <div><strong>Поведение</strong>Esc/клик вне окна скрывает; double click открывает полный dashboard.</div>
+        </div>
+      </article>
+
+      <article class="variant">
+        <header class="variant-head">
+          <div class="variant-title"><span class="num">4</span><div><h2>Switch Drawer</h2><span>список email/token + поиск</span></div></div>
+          <span class="size-tag">360 x 310 px</span>
+        </header>
+        <div class="preview">
+          <div class="drawer">
+            <div class="drawer-top"><strong>Быстрый выбор</strong><span class="state-pill">4 saved</span></div>
+            <div class="drawer-search">email или token: admin@gptclaudegemini.xyz</div>
+            <div class="drawer-list">
+              <div class="drawer-item active"><span class="avatar">AG</span><div>admin@gpt...<br><span>$2.84 · active</span></div><strong>$2.84</strong></div>
+              <div class="drawer-item"><span class="avatar">PR</span><div>project-token<br><span>sk-ccg-••••-9A7F</span></div><strong>$0.42</strong></div>
+              <div class="drawer-item"><span class="avatar">QA</span><div>qa@gpt...<br><span>idle · 2 models</span></div><strong>$0.09</strong></div>
+            </div>
+          </div>
+        </div>
+        <div class="usage-note">
+          <div><strong>Лучше для</strong>Когда часто переключаешь ключи и надо быстро открыть нужную статистику.</div>
+          <div><strong>Поведение</strong>Открывается по клику на tray icon или hotkey, например Ctrl+Alt+S.</div>
+        </div>
+      </article>
+
+      <article class="variant codex-variant">
+        <header class="variant-head">
+          <div class="variant-title"><span class="num">5</span><div><h2>Codex-only Style</h2><span>теплый темный UI, янтарные акценты, меню и карточки</span></div></div>
+          <span class="size-tag">760 x 270 px</span>
+        </header>
+        <div class="preview">
+          <div class="codex-widget">
+            <aside class="codex-menu">
+              <span class="codex-badge">● CCG STATS</span>
+              <h3>Меню</h3>
+              <a href="#">1. Сегодня</a>
+              <a href="#">2. Модели</a>
+              <a href="#">3. Ключи</a>
+            </aside>
+            <section class="codex-body">
+              <div class="codex-top"><h3>Статистика ключа</h3><button class="codex-button">Обновить</button></div>
+              <p class="codex-copy">Вариант в стиле codex-only: спокойный темный фон, янтарные плашки, крупная структура и понятная навигация для раскрытого режима.</p>
+              <div class="codex-stat-grid">
+                <div class="codex-stat"><span>cost today</span><strong>$2.84</strong></div>
+                <div class="codex-stat"><span>requests</span><strong>1,284</strong></div>
+                <div class="codex-stat"><span>limit</span><strong>18%</strong></div>
+              </div>
+              <div class="codex-alert"><strong>Важно</strong> Такой skin лучше использовать для раскрытого окна, а не для ultra-compact полоски: он читабельный, но визуально плотнее.</div>
+            </section>
+          </div>
+        </div>
+        <div class="usage-note">
+          <div><strong>Лучше для</strong>Раскрытое окно с навигацией и подробными блоками, если хотим стиль как у инструкции Codex.</div>
+          <div><strong>Поведение</strong>Можно сделать основным theme preset: green compact mode + amber Codex expanded mode.</div>
+        </div>
+      </article>
+    </section>
+  </main>
+</body>
+</html>

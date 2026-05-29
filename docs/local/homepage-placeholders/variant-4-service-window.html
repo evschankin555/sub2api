@@ -1,0 +1,47 @@
+﻿<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>GPT Claude Gemini — Service Placeholder</title>
+  <meta name="description" content="Техническая заглушка сервиса GPT Claude Gemini." />
+  <style>
+    :root { --bg: #eef3f6; --ink: #10212b; --muted: #59707d; --card: #ffffff; --line: #cddbe2; --green: #0f9f6e; --red: #ef4f3d; --yellow: #f4c542; }
+    * { box-sizing: border-box; }
+    body { margin: 0; min-height: 100vh; display: grid; place-items: center; padding: 24px; color: var(--ink); background: linear-gradient(135deg, #eef3f6, #dce8ee); font-family: "Lucida Console", Monaco, monospace; }
+    .window { width: min(980px, 100%); border: 1px solid var(--line); border-radius: 22px; background: var(--card); box-shadow: 0 28px 80px rgba(16,33,43,.16); overflow: hidden; }
+    .bar { height: 52px; display: flex; align-items: center; justify-content: space-between; padding: 0 18px; border-bottom: 1px solid var(--line); background: #f8fbfc; }
+    .dots { display: flex; gap: 8px; }
+    .dot { width: 12px; height: 12px; border-radius: 50%; } .red { background: var(--red); } .yellow { background: var(--yellow); } .green { background: var(--green); }
+    .path { color: var(--muted); font-size: 13px; }
+    .content { padding: clamp(26px, 6vw, 64px); }
+    .tag { display: inline-flex; gap: 8px; align-items: center; padding: 8px 10px; border: 1px solid var(--line); border-radius: 999px; color: var(--green); background: #f1fff9; font-size: 12px; }
+    .tag::before { content: ""; width: 8px; height: 8px; background: var(--green); border-radius: 50%; box-shadow: 0 0 0 5px rgba(15,159,110,.12); }
+    h1 { margin: 28px 0 18px; font-family: Verdana, sans-serif; font-size: clamp(40px, 7vw, 82px); line-height: .95; letter-spacing: -.07em; }
+    .lead { color: var(--muted); font-family: Verdana, sans-serif; font-size: clamp(17px, 2vw, 22px); line-height: 1.55; max-width: 720px; }
+    .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 44px; }
+    a, .tile { display: block; min-height: 130px; padding: 18px; border: 1px solid var(--line); border-radius: 18px; color: inherit; text-decoration: none; background: #fbfdfe; }
+    .tile code, a code { color: var(--green); font-weight: 800; }
+    .tile p, a p { margin: 18px 0 0; color: var(--muted); font-family: Verdana, sans-serif; font-size: 13px; line-height: 1.5; }
+    .terminal { margin-top: 36px; padding: 18px; border-radius: 18px; background: var(--ink); color: #c3f7dd; overflow-x: auto; }
+    @media (max-width: 760px) { .grid { grid-template-columns: 1fr; } .bar { align-items: flex-start; height: auto; gap: 12px; padding: 14px; flex-direction: column; } }
+  </style>
+</head>
+<body>
+  <main class="window">
+    <div class="bar"><div class="dots"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span></div><div class="path">/srv/gptclaudegemini/root</div></div>
+    <section class="content">
+      <div class="tag">server online · launch page</div>
+      <h1>Сервис готовится к первому запуску.</h1>
+      <p class="lead">Главная страница временно показывает статус. Dashboard и API живут отдельно, чтобы публичный сайт, админка и endpoint'ы не смешивались.</p>
+      <div class="grid">
+        <a href="https://d.gptclaudegemini.xyz"><code>d.</code><p>Dashboard и администрирование Sub2API.</p></a>
+        <a href="https://api.gptclaudegemini.xyz/health"><code>api.</code><p>Gateway endpoints и health check.</p></a>
+        <div class="tile"><code>root</code><p>Здесь позже будет публичная витрина.</p></div>
+      </div>
+      <pre class="terminal">$ curl https://api.gptclaudegemini.xyz/health
+{"status":"ok"}</pre>
+    </section>
+  </main>
+</body>
+</html>

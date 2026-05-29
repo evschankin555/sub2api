@@ -1,0 +1,568 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Reserved</title>
+  <style>
+    :root {
+      --bg: #07110f;
+      --panel: rgba(13, 27, 24, 0.94);
+      --panel-2: rgba(16, 37, 31, 0.62);
+      --line: rgba(210, 255, 235, 0.12);
+      --line-strong: rgba(210, 255, 235, 0.24);
+      --text: #effdf7;
+      --muted: #88a79d;
+      --soft: #b8d7cc;
+      --green: #64f0a2;
+      --blue: #7dd3fc;
+      --amber: #ffd166;
+      --ink: #050b0a;
+      --radius: 24px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+      background: var(--bg);
+    }
+
+    body {
+      position: relative;
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      overflow: hidden;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 12% 8%, rgba(100, 240, 162, 0.2), transparent 30rem),
+        radial-gradient(circle at 84% 12%, rgba(125, 211, 252, 0.15), transparent 28rem),
+        radial-gradient(circle at 62% 88%, rgba(255, 209, 102, 0.08), transparent 26rem),
+        linear-gradient(145deg, #06100e, #091815 48%, #060a09);
+      font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+      isolation: isolate;
+    }
+
+    .page-rain {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      width: 100vw;
+      height: 100vh;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 2600ms ease;
+    }
+
+    body.matrix-active .page-rain {
+      opacity: 0.22;
+    }
+
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    body::before {
+      opacity: 0.78;
+      background-image:
+        linear-gradient(rgba(210, 255, 235, 0.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(210, 255, 235, 0.045) 1px, transparent 1px);
+      background-size: 44px 44px;
+      mask-image: linear-gradient(to bottom, black, rgba(0, 0, 0, 0.82) 54%, transparent 92%);
+      animation: grid-drift 18s linear infinite;
+    }
+
+    body::after {
+      background:
+        linear-gradient(transparent 0 48%, rgba(100, 240, 162, 0.08) 50%, transparent 52%),
+        repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.018) 0 1px, transparent 1px 4px);
+      mix-blend-mode: screen;
+      opacity: 0.32;
+      animation: scan 8s ease-in-out infinite;
+    }
+
+    main {
+      position: relative;
+      z-index: 1;
+      width: min(860px, 100%);
+      border: 1px solid var(--line);
+      border-radius: 30px;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.018)),
+        var(--panel);
+      box-shadow:
+        0 24px 80px rgba(0, 0, 0, 0.36),
+        0 0 0 1px rgba(100, 240, 162, 0.04),
+        0 0 90px rgba(100, 240, 162, 0.08);
+      overflow: hidden;
+      isolation: isolate;
+      backdrop-filter: blur(20px);
+      animation: panel-in 650ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+    }
+
+    main::before {
+      content: "";
+      position: absolute;
+      inset: -1px;
+      border-radius: inherit;
+      background: linear-gradient(115deg, transparent 0 24%, rgba(100, 240, 162, 0.24), transparent 44% 100%);
+      transform: translateX(-86%);
+      animation: edge-sheen 5.8s ease-in-out infinite;
+      z-index: -1;
+    }
+
+    main.is-closing {
+      pointer-events: none;
+      animation: window-close 360ms cubic-bezier(0.55, 0, 0.25, 1) forwards;
+    }
+
+    .bar {
+      min-height: 54px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 0 18px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(5, 14, 12, 0.48);
+    }
+
+    .dots {
+      display: flex;
+      gap: 8px;
+    }
+
+    .dot {
+      appearance: none;
+      border: 0;
+      padding: 0;
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      background: #1f342f;
+      box-shadow: 0 0 18px currentColor;
+    }
+
+    .dot:nth-child(1) { color: rgba(255, 107, 107, 0.78); background: currentColor; }
+    .dot:nth-child(2) { color: rgba(255, 209, 102, 0.78); background: currentColor; }
+    .dot:nth-child(3) { color: rgba(100, 240, 162, 0.9); background: currentColor; animation: pulse-dot 2.2s ease-in-out infinite; }
+
+    .close-dot {
+      cursor: pointer;
+    }
+
+    .close-dot:hover,
+    .close-dot:focus-visible {
+      color: rgba(255, 107, 107, 1);
+      box-shadow: 0 0 18px currentColor, 0 0 0 5px rgba(255, 107, 107, 0.14);
+      outline: none;
+    }
+
+    .bar-label {
+      color: var(--muted);
+      font-family: "Cascadia Code", "JetBrains Mono", Consolas, monospace;
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    section {
+      padding: clamp(24px, 5vw, 48px);
+    }
+
+    .terminal {
+      position: relative;
+      min-height: clamp(420px, 58vh, 620px);
+      padding: clamp(24px, 4vw, 34px);
+      border: 1px solid var(--line-strong);
+      border-radius: 18px;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.026), transparent 34%),
+        rgba(4, 13, 11, 0.8);
+      color: var(--soft);
+      font-family: "Cascadia Code", "JetBrains Mono", Consolas, monospace;
+      font-size: clamp(14px, 2vw, 18px);
+      line-height: 1.85;
+      overflow: hidden;
+    }
+
+    .terminal::before {
+      content: "";
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: 4px;
+      background: var(--green);
+      box-shadow: 0 0 26px var(--green);
+      z-index: 3;
+    }
+
+    .terminal::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 50% 42%, transparent 0 48%, rgba(0, 0, 0, 0.35) 100%),
+        repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.025) 0 1px, transparent 1px 5px);
+    }
+
+    .terminal .signal {
+      color: var(--green);
+    }
+
+    .matrix-rain {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      transition: opacity 1200ms ease;
+    }
+
+    .terminal-output {
+      position: relative;
+      z-index: 2;
+      min-height: 13em;
+      margin: 0;
+      padding-left: 14px;
+      color: var(--soft);
+      white-space: pre-wrap;
+      font: inherit;
+      transition: opacity 900ms ease, filter 900ms ease;
+    }
+
+    .terminal-output.is-noise {
+      color: #8dffba;
+      letter-spacing: 0.08em;
+    }
+
+    .terminal.is-raining .matrix-rain {
+      opacity: 1;
+    }
+
+    .terminal.is-raining .terminal-output {
+      opacity: 0;
+      filter: blur(6px);
+    }
+
+    .terminal-output::after {
+      content: "";
+      display: inline-block;
+      width: 8px;
+      height: 1.15em;
+      margin-left: 4px;
+      vertical-align: -0.18em;
+      background: var(--green);
+      box-shadow: 0 0 16px var(--green);
+      animation: cursor-blink 900ms steps(1) infinite;
+    }
+
+    @keyframes grid-drift {
+      to { background-position: 44px 44px; }
+    }
+
+    @keyframes scan {
+      0%, 100% { transform: translateY(-30%); opacity: 0.18; }
+      50% { transform: translateY(30%); opacity: 0.34; }
+    }
+
+    @keyframes panel-in {
+      from { opacity: 0; transform: translateY(18px) scale(0.985); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    @keyframes window-close {
+      to {
+        opacity: 0;
+        transform: translateY(16px) scale(0.92);
+        filter: blur(9px);
+      }
+    }
+
+    @keyframes edge-sheen {
+      0%, 62%, 100% { transform: translateX(-86%); opacity: 0; }
+      72% { opacity: 1; }
+      88% { transform: translateX(86%); opacity: 0; }
+    }
+
+    @keyframes pulse-dot {
+      50% { box-shadow: 0 0 20px currentColor, 0 0 0 7px rgba(100, 240, 162, 0.12); }
+    }
+
+    @keyframes cursor-blink {
+      0%, 48% { opacity: 1; }
+      49%, 100% { opacity: 0; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 1ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+      }
+    }
+
+    @media (max-width: 620px) {
+      body {
+        padding: 14px;
+      }
+
+      .bar {
+        align-items: flex-start;
+        flex-direction: column;
+        padding: 16px;
+      }
+
+      section {
+        padding: 20px;
+      }
+
+      .terminal {
+        min-height: 340px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="page-rain" class="page-rain" aria-hidden="true"></canvas>
+  <main>
+    <div class="bar">
+      <div class="dots">
+        <button id="close-window" class="dot close-dot" type="button" aria-label="Close window"></button>
+        <span class="dot" aria-hidden="true"></span>
+        <span class="dot" aria-hidden="true"></span>
+      </div>
+      <div class="bar-label">reserved / quiet</div>
+    </div>
+    <section>
+      <div class="terminal" aria-label="Terminal message">
+        <canvas id="matrix-rain" class="matrix-rain" aria-hidden="true"></canvas>
+        <pre id="terminal-output" class="terminal-output" aria-live="polite"></pre>
+        <noscript>
+          <pre class="terminal-output"><span class="signal">$</span> Knock, knock, Neo.</pre>
+        </noscript>
+      </div>
+    </section>
+  </main>
+  <script>
+    (() => {
+      const windowPanel = document.querySelector("main");
+      const closeButton = document.getElementById("close-window");
+      const terminal = document.querySelector(".terminal");
+      const output = document.getElementById("terminal-output");
+      const terminalCanvas = document.getElementById("matrix-rain");
+      const pageCanvas = document.getElementById("page-rain");
+      let windowClosed = false;
+
+      closeButton?.addEventListener("click", () => {
+        windowClosed = true;
+        windowPanel?.classList.add("is-closing");
+        window.setTimeout(() => {
+          if (windowPanel) windowPanel.hidden = true;
+        }, 360);
+      });
+
+      if (!terminal || !output || !terminalCanvas || !pageCanvas) return;
+
+      const lines = [
+        "Wake up, Neo...",
+        "The Matrix has you...",
+        "Follow the white rabbit.",
+        "Knock, knock, Neo."
+      ];
+
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        output.textContent = lines.join("\n");
+        return;
+      }
+
+      let lineIndex = 0;
+      let charIndex = 0;
+      let text = "";
+      let rainStarted = false;
+
+      const typeNext = () => {
+        if (windowClosed) return;
+
+        const line = lines[lineIndex];
+        text += line[charIndex];
+        output.textContent = text;
+        charIndex += 1;
+
+        if (charIndex < line.length) {
+          window.setTimeout(typeNext, 105 + Math.random() * 95);
+          return;
+        }
+
+        lineIndex += 1;
+        charIndex = 0;
+
+        if (lineIndex < lines.length) {
+          text += "\n";
+          window.setTimeout(typeNext, lineIndex === lines.length - 1 ? 1280 : 860);
+          return;
+        }
+
+        window.setTimeout(runNumberPhase, 1500);
+      };
+
+      const buildNumberFrame = () => {
+        const width = Math.max(28, Math.min(58, Math.floor(terminal.clientWidth / 15)));
+        const rows = Math.max(9, Math.min(15, Math.floor(terminal.clientHeight / 32)));
+        const chars = "010101101100111000011011000101110010101011110001";
+        const frame = [];
+
+        for (let row = 0; row < rows; row += 1) {
+          let line = "";
+          for (let col = 0; col < width; col += 1) {
+            line += chars[Math.floor(Math.random() * chars.length)];
+            if (col % 8 === 7) line += " ";
+          }
+          frame.push(line);
+        }
+
+        return frame.join("\n");
+      };
+
+      const runNumberPhase = () => {
+        if (windowClosed) return;
+
+        let ticks = 0;
+        output.classList.add("is-noise");
+
+        const flicker = () => {
+          if (windowClosed) return;
+
+          output.textContent = buildNumberFrame();
+          ticks += 1;
+
+          if (ticks < 28) {
+            window.setTimeout(flicker, 82);
+            return;
+          }
+
+          window.setTimeout(startRain, 220);
+        };
+
+        flicker();
+      };
+
+      const startRain = () => {
+        if (windowClosed) return;
+        if (rainStarted) return;
+        rainStarted = true;
+
+        output.textContent = buildNumberFrame();
+        document.body.classList.add("matrix-active");
+        terminal.classList.add("is-raining");
+
+        createMatrixRain(terminalCanvas, {
+          baseFill: "rgba(4, 13, 11, 0.96)",
+          fadeFill: "rgba(4, 13, 11, 0.2)",
+          fontSizeDesktop: 20,
+          fontSizeMobile: 17,
+          frameDelay: 74,
+          softColor: "rgba(88, 217, 139, 0.62)",
+          headColor: "rgba(180, 255, 203, 0.82)",
+          resetChance: 0.972,
+          speed: 0.72
+        });
+
+        createMatrixRain(pageCanvas, {
+          baseFill: "transparent",
+          fadeFill: "rgba(7, 17, 15, 0.08)",
+          fontSizeDesktop: 44,
+          fontSizeMobile: 30,
+          frameDelay: 118,
+          softColor: "rgba(86, 205, 127, 0.5)",
+          headColor: "rgba(180, 255, 203, 0.68)",
+          resetChance: 0.988,
+          speed: 0.46
+        });
+      };
+
+      const createMatrixRain = (canvas, options) => {
+        const ctx = canvas.getContext("2d");
+        if (!ctx) return;
+
+        const glyphs = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ";
+        let fontSize = options.fontSizeDesktop;
+        let drops = [];
+        let lastFrame = 0;
+
+        const fitCanvas = () => {
+          const rect = canvas.getBoundingClientRect();
+          const dpr = Math.min(window.devicePixelRatio || 1, 2);
+          canvas.width = Math.max(1, Math.floor(rect.width * dpr));
+          canvas.height = Math.max(1, Math.floor(rect.height * dpr));
+          ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+          ctx.shadowBlur = 0;
+          fontSize = rect.width < 520 ? options.fontSizeMobile : options.fontSizeDesktop;
+          drops = Array.from(
+            { length: Math.ceil(rect.width / fontSize) },
+            () => -Math.floor(Math.random() * 42)
+          );
+
+          if (options.baseFill !== "transparent") {
+            ctx.fillStyle = options.baseFill;
+            ctx.fillRect(0, 0, rect.width, rect.height);
+          } else {
+            ctx.clearRect(0, 0, rect.width, rect.height);
+          }
+        };
+
+        const draw = (time) => {
+          const rect = canvas.getBoundingClientRect();
+          window.requestAnimationFrame(draw);
+
+          if (time - lastFrame < options.frameDelay) return;
+          lastFrame = time;
+
+          ctx.shadowBlur = 0;
+          ctx.fillStyle = options.fadeFill;
+          ctx.fillRect(0, 0, rect.width, rect.height);
+          ctx.font = `${fontSize}px "Cascadia Code", "JetBrains Mono", Consolas, monospace`;
+          ctx.textAlign = "center";
+          ctx.textBaseline = "top";
+
+          for (let i = 0; i < drops.length; i += 1) {
+            const glyph = glyphs[Math.floor(Math.random() * glyphs.length)];
+            const x = i * fontSize + fontSize / 2;
+            const y = drops[i] * fontSize;
+
+            ctx.fillStyle = Math.random() > 0.982 ? options.headColor : options.softColor;
+            ctx.fillText(glyph, x, y);
+
+            if (y > rect.height + fontSize && Math.random() > options.resetChance) {
+              drops[i] = -Math.floor(Math.random() * 24);
+            } else {
+              drops[i] += options.speed;
+            }
+          }
+        };
+
+        fitCanvas();
+        window.addEventListener("resize", fitCanvas);
+        window.requestAnimationFrame(draw);
+      };
+
+      window.setTimeout(typeNext, 650);
+    })();
+  </script>
+</body>
+</html>

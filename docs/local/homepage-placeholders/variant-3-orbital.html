@@ -1,0 +1,47 @@
+﻿<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>GPT Claude Gemini — Orbital Gateway</title>
+  <meta name="description" content="Dashboard и API gateway для AI-моделей." />
+  <style>
+    :root { --bg: #101013; --text: #fff8e8; --muted: #b6ad9e; --orange: #ff7a2f; --cyan: #43d6ff; --pink: #ff4fa3; --card: rgba(255,248,232,.08); }
+    * { box-sizing: border-box; }
+    body { margin: 0; min-height: 100vh; color: var(--text); background: #101013; font-family: "Trebuchet MS", Verdana, sans-serif; overflow-x: hidden; }
+    .orb { position: fixed; border-radius: 50%; filter: blur(.2px); opacity: .95; animation: float 8s ease-in-out infinite; }
+    .orb.one { width: 42vw; height: 42vw; right: -10vw; top: -11vw; background: radial-gradient(circle at 35% 35%, #fff4b8, var(--orange) 38%, transparent 70%); }
+    .orb.two { width: 28vw; height: 28vw; left: -8vw; bottom: -8vw; background: radial-gradient(circle at 35% 35%, #e9fbff, var(--cyan) 40%, transparent 72%); animation-delay: -3s; }
+    .orb.three { width: 14vw; height: 14vw; right: 18vw; bottom: 10vw; background: radial-gradient(circle at 35% 35%, #ffe8f4, var(--pink) 42%, transparent 75%); animation-delay: -1s; }
+    @keyframes float { 50% { transform: translateY(-18px) scale(1.03); } }
+    main { position: relative; z-index: 1; min-height: 100vh; padding: 42px; display: flex; flex-direction: column; justify-content: space-between; }
+    nav { display: flex; justify-content: space-between; gap: 24px; align-items: center; color: var(--muted); }
+    .brand { color: var(--text); font-weight: 900; letter-spacing: -.05em; font-size: 24px; }
+    .pill { border: 1px solid rgba(255,248,232,.22); border-radius: 999px; padding: 10px 14px; background: rgba(0,0,0,.18); }
+    h1 { max-width: 940px; margin: 10vh 0 0; font-size: clamp(54px, 10vw, 142px); line-height: .82; letter-spacing: -.09em; text-transform: uppercase; }
+    .bottom { display: grid; grid-template-columns: 1fr 1.15fr; gap: 28px; align-items: end; margin-top: 70px; }
+    .lead { color: var(--muted); font-size: clamp(18px, 2vw, 24px); line-height: 1.5; max-width: 620px; }
+    .cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+    a, .card { min-height: 126px; display: block; color: inherit; text-decoration: none; border: 1px solid rgba(255,248,232,.18); border-radius: 28px; background: var(--card); padding: 20px; backdrop-filter: blur(18px); }
+    .card b { font-size: 14px; color: var(--cyan); text-transform: uppercase; letter-spacing: .15em; }
+    .card p { margin: 18px 0 0; color: var(--muted); line-height: 1.45; }
+    .wide { grid-column: span 2; }
+    @media (max-width: 820px) { main { padding: 24px; } nav { align-items: flex-start; flex-direction: column; } .bottom { grid-template-columns: 1fr; } .cards { grid-template-columns: 1fr; } .wide { grid-column: auto; } .orb.one { width: 80vw; height: 80vw; } .orb.two { width: 52vw; height: 52vw; } }
+  </style>
+</head>
+<body>
+  <div class="orb one"></div><div class="orb two"></div><div class="orb three"></div>
+  <main>
+    <nav><div class="brand">gptclaudegemini.xyz</div><div class="pill">private launch / API gateway</div></nav>
+    <h1>AI orbit is loading</h1>
+    <section class="bottom">
+      <p class="lead">Мы разводим публичный сайт, dashboard и API на отдельные поддомены. Сейчас главная работает как лаконичная заглушка перед запуском.</p>
+      <div class="cards">
+        <a class="card" href="https://d.gptclaudegemini.xyz"><b>Dashboard</b><p>Войти в панель управления: аккаунты, группы, каналы, мониторинг.</p></a>
+        <a class="card" href="https://api.gptclaudegemini.xyz/health"><b>API health</b><p>Проверить доступность API-контура для интеграций.</p></a>
+        <div class="card wide"><b>Endpoint policy</b><p>На api-поддомене будет только gateway: `/v1`, `/v1beta`, `/antigravity/*` и `/health`.</p></div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

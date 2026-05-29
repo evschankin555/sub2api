@@ -1,0 +1,930 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CCG Stats Windows Tray Widget Prototype</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&family=Manrope:wght@500;600;700;800&display=swap');
+
+    :root {
+      --bg: #09100f;
+      --panel: rgba(13, 24, 22, 0.82);
+      --panel-strong: rgba(15, 29, 27, 0.96);
+      --line: rgba(128, 255, 202, 0.17);
+      --line-hot: rgba(105, 255, 194, 0.46);
+      --text: #eafff7;
+      --muted: #8eaba2;
+      --muted-2: #647d76;
+      --green: #63ffc2;
+      --green-2: #19d793;
+      --cyan: #73d9ff;
+      --amber: #ffd36b;
+      --red: #ff6d7a;
+      --violet: #bca5ff;
+      --shadow: 0 30px 90px rgba(0, 0, 0, 0.58);
+      --radius-xl: 30px;
+      --radius-lg: 22px;
+      --radius-md: 15px;
+      --font-ui: Manrope, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      color: var(--text);
+      font-family: var(--font-ui);
+      background:
+        radial-gradient(circle at 18% 12%, rgba(99, 255, 194, 0.16), transparent 34%),
+        radial-gradient(circle at 84% 22%, rgba(115, 217, 255, 0.1), transparent 32%),
+        linear-gradient(145deg, #07110f 0%, #0c1516 42%, #070a0d 100%);
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(99, 255, 194, 0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(99, 255, 194, 0.035) 1px, transparent 1px);
+      background-size: 42px 42px;
+      mask-image: linear-gradient(to bottom, transparent 0%, black 12%, black 76%, transparent 100%);
+    }
+
+    .shell {
+      width: min(1440px, calc(100vw - 48px));
+      margin: 0 auto;
+      padding: 42px 0 72px;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 360px;
+      gap: 24px;
+      align-items: end;
+      margin-bottom: 28px;
+    }
+
+    .hero h1 {
+      max-width: 900px;
+      margin: 0;
+      font-size: clamp(44px, 5.5vw, 86px);
+      line-height: 0.9;
+      letter-spacing: -0.075em;
+      text-wrap: balance;
+    }
+
+    .hero p {
+      max-width: 760px;
+      margin: 18px 0 0;
+      color: var(--muted);
+      font-size: 17px;
+      line-height: 1.7;
+    }
+
+    .kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 18px;
+      color: var(--green);
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    .kicker::before {
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+      background: var(--green);
+      box-shadow: 0 0 28px var(--green);
+      content: '';
+    }
+
+    .legend {
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      background: rgba(7, 15, 14, 0.62);
+      box-shadow: inset 0 1px rgba(255,255,255,0.04);
+    }
+
+    .legend strong {
+      display: block;
+      margin-bottom: 10px;
+      font-size: 15px;
+    }
+
+    .legend span {
+      display: block;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .stage {
+      position: relative;
+      display: grid;
+      grid-template-columns: 320px minmax(0, 1fr) 360px;
+      gap: 22px;
+      min-height: 820px;
+      padding: 24px;
+      border: 1px solid var(--line);
+      border-radius: 38px;
+      background:
+        linear-gradient(140deg, rgba(11, 22, 20, 0.7), rgba(5, 10, 13, 0.74)),
+        radial-gradient(circle at 62% 18%, rgba(99, 255, 194, 0.12), transparent 36%);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .stage::before {
+      content: '';
+      position: absolute;
+      left: 24px;
+      right: 24px;
+      bottom: 82px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(99, 255, 194, 0.22), transparent);
+    }
+
+    .stage-label {
+      position: absolute;
+      right: 34px;
+      top: 30px;
+      color: rgba(234, 255, 247, 0.38);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+    }
+
+    .taskbar {
+      position: absolute;
+      left: 22px;
+      right: 22px;
+      bottom: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 50px;
+      padding: 0 12px;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 18px;
+      background: rgba(2, 6, 7, 0.76);
+      backdrop-filter: blur(20px);
+      box-shadow: 0 -18px 70px rgba(0, 0, 0, 0.35);
+    }
+
+    .start {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--muted);
+      font-family: var(--font-mono);
+      font-size: 12px;
+    }
+
+    .win-dot {
+      width: 25px;
+      height: 25px;
+      border-radius: 8px;
+      background:
+        linear-gradient(90deg, transparent 46%, rgba(0,0,0,.45) 46% 54%, transparent 54%),
+        linear-gradient(transparent 46%, rgba(0,0,0,.45) 46% 54%, transparent 54%),
+        linear-gradient(135deg, #2efab1, #62d6ff);
+      box-shadow: 0 0 22px rgba(99, 255, 194, 0.22);
+    }
+
+    .tray-cluster {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .tray-pill {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      height: 32px;
+      padding: 0 12px;
+      border: 1px solid rgba(99, 255, 194, 0.22);
+      border-radius: 999px;
+      background: rgba(99, 255, 194, 0.08);
+      color: #bfffe9;
+      font-family: var(--font-mono);
+      font-size: 12px;
+    }
+
+    .tray-icon {
+      display: grid;
+      place-items: center;
+      width: 24px;
+      height: 24px;
+      border-radius: 8px;
+      color: #041412;
+      background: var(--green);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .column {
+      position: relative;
+      z-index: 1;
+      align-self: start;
+      padding-top: 56px;
+    }
+
+    .panel {
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xl);
+      background: var(--panel);
+      backdrop-filter: blur(22px);
+      box-shadow: 0 24px 70px rgba(0, 0, 0, 0.33), inset 0 1px rgba(255,255,255,0.04);
+    }
+
+    .panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 18px 0;
+    }
+
+    .panel-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    .panel-title .glyph {
+      display: grid;
+      place-items: center;
+      width: 30px;
+      height: 30px;
+      border-radius: 12px;
+      background: rgba(99, 255, 194, 0.12);
+      color: var(--green);
+      font-family: var(--font-mono);
+      box-shadow: inset 0 0 0 1px rgba(99, 255, 194, 0.18);
+    }
+
+    .window-controls {
+      display: flex;
+      gap: 7px;
+    }
+
+    .control {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #3a514b;
+    }
+
+    .control.red { background: var(--red); }
+    .control.yellow { background: var(--amber); }
+    .control.green { background: var(--green); }
+
+    .compact-strip {
+      position: absolute;
+      z-index: 4;
+      left: 50%;
+      bottom: 90px;
+      transform: translateX(-50%);
+      display: grid;
+      grid-template-columns: auto auto auto auto;
+      align-items: center;
+      gap: 12px;
+      width: min(730px, calc(100% - 80px));
+      padding: 12px 14px;
+      border: 1px solid var(--line-hot);
+      border-radius: 999px;
+      background: rgba(4, 15, 14, 0.88);
+      backdrop-filter: blur(28px);
+      box-shadow: 0 18px 65px rgba(0, 0, 0, 0.48), 0 0 0 1px rgba(99, 255, 194, 0.08) inset;
+    }
+
+    .compact-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .brand-mark {
+      display: grid;
+      place-items: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 14px;
+      color: #031311;
+      background: linear-gradient(135deg, var(--green), var(--cyan));
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 900;
+      box-shadow: 0 0 32px rgba(99, 255, 194, 0.27);
+    }
+
+    .compact-brand strong {
+      display: block;
+      font-size: 13px;
+      line-height: 1.1;
+    }
+
+    .compact-brand span {
+      display: block;
+      color: var(--muted);
+      font-family: var(--font-mono);
+      font-size: 10px;
+      white-space: nowrap;
+    }
+
+    .compact-metric {
+      display: grid;
+      gap: 2px;
+      min-width: 90px;
+      padding: 0 10px;
+      border-left: 1px solid rgba(99, 255, 194, 0.12);
+    }
+
+    .compact-metric span {
+      color: var(--muted-2);
+      font-family: var(--font-mono);
+      font-size: 10px;
+      text-transform: uppercase;
+    }
+
+    .compact-metric strong {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: var(--text);
+    }
+
+    .expand-btn {
+      border: 0;
+      border-radius: 999px;
+      padding: 11px 15px;
+      color: #031311;
+      background: var(--green);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: 0.04em;
+      box-shadow: 0 0 35px rgba(99, 255, 194, 0.22);
+    }
+
+    .lookup-panel {
+      min-height: 630px;
+      padding: 18px;
+    }
+
+    .search-box {
+      margin: 18px 0;
+      padding: 14px;
+      border: 1px solid rgba(99, 255, 194, 0.18);
+      border-radius: 20px;
+      background: rgba(2, 8, 9, 0.54);
+    }
+
+    .search-label {
+      display: block;
+      margin-bottom: 9px;
+      color: var(--muted);
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .search-input {
+      width: 100%;
+      border: 0;
+      outline: 0;
+      padding: 0;
+      color: var(--text);
+      background: transparent;
+      font-family: var(--font-mono);
+      font-size: 12px;
+    }
+
+    .search-input::placeholder {
+      color: #49665e;
+    }
+
+    .history-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .history-item {
+      display: grid;
+      grid-template-columns: 34px minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 10px;
+      padding: 11px;
+      border: 1px solid rgba(255,255,255,0.055);
+      border-radius: 17px;
+      background: rgba(255,255,255,0.025);
+    }
+
+    .history-item.active {
+      border-color: rgba(99, 255, 194, 0.34);
+      background: rgba(99, 255, 194, 0.075);
+    }
+
+    .history-avatar {
+      display: grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 13px;
+      color: var(--green);
+      background: rgba(99, 255, 194, 0.1);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 900;
+    }
+
+    .history-copy {
+      min-width: 0;
+    }
+
+    .history-copy strong,
+    .history-copy span {
+      display: block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .history-copy strong {
+      font-size: 12px;
+    }
+
+    .history-copy span {
+      margin-top: 3px;
+      color: var(--muted-2);
+      font-family: var(--font-mono);
+      font-size: 10px;
+    }
+
+    .mini-cost {
+      color: var(--green);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .floating-widget {
+      max-width: 620px;
+      margin: 36px auto 0;
+      overflow: hidden;
+    }
+
+    .floating-widget .content {
+      padding: 20px;
+    }
+
+    .identity-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 18px;
+      margin: 18px 0 20px;
+    }
+
+    .identity-row h2 {
+      margin: 0;
+      font-size: 26px;
+      line-height: 1;
+      letter-spacing: -0.06em;
+    }
+
+    .identity-row p {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-family: var(--font-mono);
+      font-size: 11px;
+    }
+
+    .status {
+      flex: 0 0 auto;
+      padding: 8px 10px;
+      border-radius: 999px;
+      color: #031311;
+      background: var(--green);
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 900;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .stat-card {
+      min-height: 86px;
+      padding: 13px;
+      border: 1px solid rgba(99, 255, 194, 0.14);
+      border-radius: 18px;
+      background: rgba(2, 8, 9, 0.42);
+    }
+
+    .stat-card span {
+      display: block;
+      color: var(--muted-2);
+      font-family: var(--font-mono);
+      font-size: 9px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .stat-card strong {
+      display: block;
+      margin-top: 12px;
+      font-family: var(--font-mono);
+      font-size: 15px;
+    }
+
+    .stat-card.hot strong {
+      color: var(--green);
+    }
+
+    .sparkline {
+      height: 78px;
+      margin: 16px 0;
+      border: 1px solid rgba(99, 255, 194, 0.1);
+      border-radius: 18px;
+      background:
+        linear-gradient(rgba(99, 255, 194, 0.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(99, 255, 194, 0.06) 1px, transparent 1px),
+        rgba(2, 8, 9, 0.36);
+      background-size: 18px 18px;
+      overflow: hidden;
+    }
+
+    .sparkline svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .model-table {
+      display: grid;
+      gap: 9px;
+    }
+
+    .model-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 86px 84px 84px;
+      align-items: center;
+      gap: 10px;
+      padding: 11px 12px;
+      border: 1px solid rgba(255,255,255,0.055);
+      border-radius: 16px;
+      background: rgba(255,255,255,0.025);
+    }
+
+    .model-name strong {
+      display: block;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      line-height: 1.25;
+    }
+
+    .model-name span {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted-2);
+      font-family: var(--font-mono);
+      font-size: 9px;
+    }
+
+    .model-metric {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      text-align: right;
+    }
+
+    .model-metric.green {
+      color: var(--green);
+    }
+
+    .side-concepts {
+      display: grid;
+      gap: 16px;
+    }
+
+    .concept-card {
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      background: rgba(7, 15, 14, 0.62);
+    }
+
+    .concept-card h3 {
+      margin: 0 0 10px;
+      font-size: 15px;
+      letter-spacing: -0.03em;
+    }
+
+    .concept-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .concept-preview {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 14px;
+      min-height: 46px;
+    }
+
+    .micro-pill {
+      padding: 8px 10px;
+      border-radius: 999px;
+      background: rgba(99, 255, 194, 0.1);
+      color: var(--green);
+      font-family: var(--font-mono);
+      font-size: 10px;
+    }
+
+    .vertical-meter {
+      width: 18px;
+      height: 72px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.06);
+      overflow: hidden;
+    }
+
+    .vertical-meter div {
+      width: 100%;
+      height: 64%;
+      margin-top: 36%;
+      background: linear-gradient(var(--cyan), var(--green));
+    }
+
+    .ticker-strip {
+      width: 100%;
+      padding: 9px 10px;
+      border: 1px solid rgba(115, 217, 255, 0.24);
+      border-radius: 13px;
+      color: var(--cyan);
+      background: rgba(115, 217, 255, 0.075);
+      font-family: var(--font-mono);
+      font-size: 10px;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+
+    .notes {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 24px;
+    }
+
+    .note {
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      background: rgba(7, 15, 14, 0.52);
+    }
+
+    .note strong {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--green);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      text-transform: uppercase;
+    }
+
+    .note span {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    @media (max-width: 1180px) {
+      .hero,
+      .stage,
+      .notes {
+        grid-template-columns: 1fr;
+      }
+
+      .stage {
+        min-height: auto;
+        padding-bottom: 110px;
+      }
+
+      .compact-strip {
+        position: relative;
+        left: auto;
+        bottom: auto;
+        transform: none;
+        width: 100%;
+        margin-top: 22px;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .shell {
+        width: min(100% - 24px, 1440px);
+        padding-top: 24px;
+      }
+
+      .stage {
+        padding: 14px 14px 100px;
+        border-radius: 26px;
+      }
+
+      .stats-grid,
+      .notes {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .model-row {
+        grid-template-columns: 1fr;
+      }
+
+      .model-metric {
+        text-align: left;
+      }
+
+      .compact-strip {
+        grid-template-columns: 1fr 1fr;
+        border-radius: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <section class="hero">
+      <div>
+        <span class="kicker">CCG Stats Desktop Widget</span>
+        <h1>Мини-статистика поверх рабочего стола.</h1>
+        <p>Визуальный HTML-прототип будущего Windows tray-приложения: компактная полоска у панели задач, раскрываемый виджет со статистикой моделей и экран быстрого выбора email/token из истории.</p>
+      </div>
+      <aside class="legend">
+        <strong>Идея поведения</strong>
+        <span>Иконка в трее открывает floating overlay. В свернутом режиме видна тонкая полоска с расходом, запросами и статусом. В раскрытом режиме видны модели, лимиты и быстрый переключатель аккаунтов.</span>
+      </aside>
+    </section>
+
+    <section class="stage">
+      <span class="stage-label">Windows desktop mock / always-on-top overlay</span>
+
+      <aside class="column panel lookup-panel">
+        <div class="panel-header">
+          <div class="panel-title"><span class="glyph">⌘</span> Быстрый доступ</div>
+          <div class="window-controls"><span class="control red"></span><span class="control yellow"></span><span class="control green"></span></div>
+        </div>
+
+        <div class="search-box">
+          <label class="search-label">email или token</label>
+          <input class="search-input" value="admin@gptclaudegemini.xyz" aria-label="email or token" />
+        </div>
+
+        <div class="history-list">
+          <div class="history-item active">
+            <div class="history-avatar">AG</div>
+            <div class="history-copy"><strong>admin@gptclaudegemini.xyz</strong><span>active · synced 14:02</span></div>
+            <div class="mini-cost">$2.84</div>
+          </div>
+          <div class="history-item">
+            <div class="history-avatar">PR</div>
+            <div class="history-copy"><strong>project-token-live</strong><span>sk-ccg-••••-9A7F</span></div>
+            <div class="mini-cost">$0.42</div>
+          </div>
+          <div class="history-item">
+            <div class="history-avatar">QA</div>
+            <div class="history-copy"><strong>qa@gptclaudegemini.xyz</strong><span>idle · 2 models</span></div>
+            <div class="mini-cost">$0.09</div>
+          </div>
+          <div class="history-item">
+            <div class="history-avatar">UX</div>
+            <div class="history-copy"><strong>ux-research-token</strong><span>sk-ccg-••••-A113</span></div>
+            <div class="mini-cost">$1.17</div>
+          </div>
+        </div>
+      </aside>
+
+      <section class="column">
+        <article class="panel floating-widget">
+          <div class="panel-header">
+            <div class="panel-title"><span class="glyph">Σ</span> Детальная статистика</div>
+            <div class="window-controls"><span class="control red"></span><span class="control yellow"></span><span class="control green"></span></div>
+          </div>
+
+          <div class="content">
+            <div class="identity-row">
+              <div>
+                <h2>admin@gptclaudegemini.xyz</h2>
+                <p>today · Beijing window · updated 14:02:18</p>
+              </div>
+              <span class="status">ACTIVE</span>
+            </div>
+
+            <div class="stats-grid">
+              <div class="stat-card hot"><span>cost today</span><strong>$2.84</strong></div>
+              <div class="stat-card"><span>requests</span><strong>1,284</strong></div>
+              <div class="stat-card"><span>tokens</span><strong>2.9M</strong></div>
+              <div class="stat-card"><span>limit used</span><strong>18%</strong></div>
+            </div>
+
+            <div class="sparkline" aria-label="usage chart">
+              <svg viewBox="0 0 600 78" preserveAspectRatio="none">
+                <path d="M0 58 C44 51, 62 30, 102 36 C152 44, 160 17, 210 24 C264 32, 280 52, 334 39 C382 28, 404 19, 448 26 C504 35, 520 55, 600 30" fill="none" stroke="rgba(99,255,194,.86)" stroke-width="3" />
+                <path d="M0 58 C44 51, 62 30, 102 36 C152 44, 160 17, 210 24 C264 32, 280 52, 334 39 C382 28, 404 19, 448 26 C504 35, 520 55, 600 30 L600 78 L0 78 Z" fill="rgba(99,255,194,.1)" />
+              </svg>
+            </div>
+
+            <div class="model-table">
+              <div class="model-row">
+                <div class="model-name"><strong>claude-sonnet-4-5</strong><span>balanced coding / text</span></div>
+                <div class="model-metric">682 req</div>
+                <div class="model-metric">1.42M tok</div>
+                <div class="model-metric green">$1.74</div>
+              </div>
+              <div class="model-row">
+                <div class="model-name"><strong>gemini-2.5-pro</strong><span>analysis / long context</span></div>
+                <div class="model-metric">308 req</div>
+                <div class="model-metric">940K tok</div>
+                <div class="model-metric green">$0.81</div>
+              </div>
+              <div class="model-row">
+                <div class="model-name"><strong>gpt-5.4-mini</strong><span>fast utility calls</span></div>
+                <div class="model-metric">294 req</div>
+                <div class="model-metric">530K tok</div>
+                <div class="model-metric green">$0.29</div>
+              </div>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <aside class="column side-concepts">
+        <div class="concept-card">
+          <h3>Вариант A · Dock strip</h3>
+          <p>Полоска над панелью задач. Минимум места, всегда видны cost/requests/status. Клик раскрывает детальный виджет.</p>
+          <div class="concept-preview"><span class="micro-pill">$2.84</span><span class="micro-pill">1.2K req</span><span class="micro-pill">18%</span></div>
+        </div>
+        <div class="concept-card">
+          <h3>Вариант B · Vertical meter</h3>
+          <p>Узкая боковая стойка справа: индикатор лимита и цветовой статус. Подходит, если нужно держать статистику всегда на экране.</p>
+          <div class="concept-preview"><div class="vertical-meter"><div></div></div><span class="micro-pill">limit 18%</span></div>
+        </div>
+        <div class="concept-card">
+          <h3>Вариант C · Ticker</h3>
+          <p>Очень компактный бегущий статус по моделям. Полезно для мониторинга без открытия окна.</p>
+          <div class="concept-preview"><div class="ticker-strip">sonnet $1.74 · gemini $0.81 · gpt-mini $0.29 · sync ok</div></div>
+        </div>
+      </aside>
+
+      <div class="compact-strip" aria-label="collapsed widget strip">
+        <div class="compact-brand">
+          <div class="brand-mark">CCG</div>
+          <div><strong>Stats tray</strong><span>collapsed strip</span></div>
+        </div>
+        <div class="compact-metric"><span>today</span><strong>$2.84</strong></div>
+        <div class="compact-metric"><span>requests</span><strong>1,284</strong></div>
+        <button class="expand-btn">OPEN</button>
+      </div>
+
+      <div class="taskbar">
+        <div class="start"><span class="win-dot"></span> Windows taskbar</div>
+        <div class="tray-cluster">
+          <div class="tray-pill"><span class="tray-icon">Σ</span> CCG $2.84</div>
+          <div class="start">14:02 · 15.05.2026</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="notes">
+      <div class="note"><strong>Collapsed</strong><span>Полоска должна иметь 2-3 ключевых метрики: расход, запросы, процент лимита. Никакой перегрузки.</span></div>
+      <div class="note"><strong>Expanded</strong><span>Окно показывает выбранный аккаунт, актуальный sync, график и таблицу моделей. Красная кнопка может скрывать overlay.</span></div>
+      <div class="note"><strong>Switch list</strong><span>Список слева нужен для быстрого выбора ранее открытых email/token и ручного ввода нового значения.</span></div>
+    </section>
+  </main>
+</body>
+</html>

@@ -138,3 +138,6 @@ docs/*
 frontend/coverage/
 aicodex
 output/
+
+# Local deploy tarballs (server upload artifacts, not source)
+sub2api-build-*.tgz
