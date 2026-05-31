@@ -364,3 +364,9 @@ This mode keeps the data in project directories, which simplifies backup, migrat
 - The card shows the busiest prompt key count, raw text MB for that key, and a total MB fallback across keys in the monitor when the heavier DB-size summary is not returned fast enough.
 - The row hint stays aligned with the selected Variant 4 layout: count + MB are shown together and tags remain collapsed for modal/tooltip use.
 - Source was updated in `D:\cursor\ccg-stats-mini-frontend`, built with `npm run build`, deployed to `/var/www/statistics.gptclaudegemini.xyz`, and verified with Playwright. Screenshot: `D:\cursor\sub2api-base\output\playwright\proxy-monitor-prompt-storage-header.png`.
+
+## 2026-05-31 AI Route Service Cleanup
+- Public Nginx routes still point to the live `ai-route-proxy-prompt-mb.service` on `127.0.0.1:3133`, version `2026-05-27.8`.
+- Stopped and disabled old rollback/experiment services: `ai-route-proxy-analysis.service`, `ai-route-proxy-crm-link.service`, `ai-route-proxy-daily-spend.service`, `ai-route-proxy-default-trace.service`, `ai-route-proxy-model-block.service`, and `ai-route-proxy-responses-capture.service`.
+- After cleanup, the only enabled/running `ai-route-proxy*.service` is `ai-route-proxy-prompt-mb.service`. The separate `api-claude-router` process on `3130` was not touched.
+- Live telemetry confirms prompt analysis is off: `PROMPT_ANALYZER_ENABLED=false`, `analyzerEnabled=false`, queue `0`, raw prompt MB `0`.
