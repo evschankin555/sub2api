@@ -140,6 +140,20 @@ This mode keeps the data in project directories, which simplifies backup, migrat
 - Route/model/CRM telemetry is unchanged; only prompt body storage and analysis jobs are off by default.
 - Re-enable only with an explicit operator decision; do not turn prompt capture back on silently during unrelated proxy work.
 
+## 2026-05-31 Sub2API 20x/5x Mirror Proxy
+- Added an independent streaming mirror proxy for `20x.gptclaudegemini.xyz` and `5x.gptclaudegemini.xyz`; the existing `ai.gptclaudegemini.xyz` proxy on `127.0.0.1:3133` was not restarted or repointed.
+- New systemd service: `ai-route-proxy-sub2api.service`, binary `/opt/ai-route-proxy/bin/ai-route-proxy-20260531-sub2api`, env `/opt/ai-route-proxy/.env.sub2api`, listener `127.0.0.1:3134`.
+- New gateway settings: `UPSTREAM_BASE=https://sub2api.gptclubapi.xyz`, `ROUTE_MODE=mirror`, `AUTH_MODE=passthrough`, `PROMPT_TRACE_DEFAULT_ENABLED=false`, `PROMPT_ANALYZER_ENABLED=false`.
+- Mirror mode preserves path and query exactly, e.g. `/v1/models` maps to `https://sub2api.gptclubapi.xyz/v1/models`; no WebSocket Upgrade tunnel was added in v1.
+- Created separate MariaDB schema `ai_route_proxy_sub2api` for 20x/5x telemetry, using the existing local MariaDB container and existing proxy DB user. This keeps 20x/5x stats separate from the AI proxy telemetry DB.
+- Let's Encrypt certificate was issued for `20x.gptclaudegemini.xyz` and `5x.gptclaudegemini.xyz`; cert path `/etc/letsencrypt/live/20x.gptclaudegemini.xyz/`.
+- Nginx config `/etc/nginx/sites-available/20x-5x.gptclaudegemini.xyz.conf` proxies both hosts to `127.0.0.1:3134` with streaming-safe settings from `ai-route-proxy-params.conf`, `gzip off`, and `client_max_body_size 20m`.
+- Statistics Nginx now exposes `/api/proxy/telemetry/sub2api` and `/api/proxy/telemetry/sub2api/*` to `127.0.0.1:3134/telemetry`; the original `/api/proxy/telemetry` route remains on `127.0.0.1:3133`.
+- Statistics Nginx telemetry proxy timeouts were raised from `10s` to `30s` because the existing AI telemetry endpoint can take about 12 seconds under live MariaDB load; this avoids a false `504` on the monitor page without restarting the AI proxy.
+- The statistics frontend source in `D:\cursor\ccg-stats-mini-frontend` now has proxy source tabs: `AI` and `20x / 5x`. The selected source is stored in localStorage and all detail/admin telemetry calls use the selected source.
+- Production frontend assets were rebuilt with Vite and deployed to `/var/www/statistics.gptclaudegemini.xyz`; server backups were created under `/root/statistics.gptclaudegemini.xyz-before-sub2api-source-*`.
+- Validation passed: DNS resolves both new hosts to `185.228.72.116`; `https://20x.gptclaudegemini.xyz/healthz` and `https://5x.gptclaudegemini.xyz/healthz` return version `2026-05-31.1`; `https://ai.gptclaudegemini.xyz/healthz` still returns `2026-05-27.8`; invalid-token `/v1/models` reaches upstream and returns upstream `401`; admin telemetry shows `sub2api 2026-05-31.1` while AI telemetry remains `2026-05-27.8`; browser smoke on `statistics.gptclaudegemini.xyz/?lang=en&proxyMonitor=1&proxyAdmin=1` switches to `20x / 5x` with zero console errors.
+
 ## 2026-05-29 Sub2API Russian Locale Deploy
 - Committed the full Russian frontend locale baseline locally as `84a7769c` on branch `sub2api-base-local`.
 - Built and deployed image `sub2api-local:ru-antigravity-20260529` on `gptclaudegemini` from the committed worktree tarball.
