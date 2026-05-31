@@ -384,3 +384,11 @@ This mode keeps the data in project directories, which simplifies backup, migrat
 - Stopped and disabled old rollback/experiment services: `ai-route-proxy-analysis.service`, `ai-route-proxy-crm-link.service`, `ai-route-proxy-daily-spend.service`, `ai-route-proxy-default-trace.service`, `ai-route-proxy-model-block.service`, and `ai-route-proxy-responses-capture.service`.
 - After cleanup, the only enabled/running `ai-route-proxy*.service` is `ai-route-proxy-prompt-mb.service`. The separate `api-claude-router` process on `3130` was not touched.
 - Live telemetry confirms prompt analysis is off: `PROMPT_ANALYZER_ENABLED=false`, `analyzerEnabled=false`, queue `0`, raw prompt MB `0`.
+
+## 2026-05-31 Proxy Telemetry Source Split And Admin Gate
+- `ai-route-proxy` telemetry was upgraded to version `2026-05-31.2` and now exposes `GET /telemetry/admin/check`; the endpoint returns `204` only when `X-Proxy-Admin-Token` is valid.
+- Public telemetry on both live proxy services is admin-only: `127.0.0.1:3133/telemetry` and `127.0.0.1:3134/telemetry` return `401 admin_auth_required` without the admin token.
+- Statistics Nginx now protects telemetry routes with `auth_request`: `/api/proxy/telemetry` checks `127.0.0.1:3133/telemetry/admin/check`, and `/api/proxy/telemetry/sub2api` checks `127.0.0.1:3134/telemetry/admin/check`.
+- The statistics frontend keeps `AI` and `20x / 5x` as separate sources and persists the selected source in the URL as `proxySource=ai` or `proxySource=sub2api`; the same source is used for summary, key detail, security, prompt trace, and metadata requests.
+- The monitor now shows explicit source markers in the toolbar: frontend telemetry API path, public proxy host names, and upstream base URL. This makes it clear whether the visible rows came from `ai.gptclaudegemini.xyz` or from the `20x/5x` mirror.
+- Validation passed: unauthenticated public telemetry returns `401`; admin telemetry returns `2026-05-31.2` with `https://api.gptclubapi.xyz/openai` for `AI` and `https://sub2api.gptclubapi.xyz` for `20x / 5x`; `npm run build` passed and the new statistics bundle was deployed to `/var/www/statistics.gptclaudegemini.xyz`.
