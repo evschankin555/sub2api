@@ -392,3 +392,9 @@ This mode keeps the data in project directories, which simplifies backup, migrat
 - The statistics frontend keeps `AI` and `20x / 5x` as separate sources and persists the selected source in the URL as `proxySource=ai` or `proxySource=sub2api`; the same source is used for summary, key detail, security, prompt trace, and metadata requests.
 - The monitor now shows explicit source markers in the toolbar: frontend telemetry API path, public proxy host names, and upstream base URL. This makes it clear whether the visible rows came from `ai.gptclaudegemini.xyz` or from the `20x/5x` mirror.
 - Validation passed: unauthenticated public telemetry returns `401`; admin telemetry returns `2026-05-31.2` with `https://api.gptclubapi.xyz/openai` for `AI` and `https://sub2api.gptclubapi.xyz` for `20x / 5x`; `npm run build` passed and the new statistics bundle was deployed to `/var/www/statistics.gptclaudegemini.xyz`.
+
+## 2026-06-01 Pro Max Dedicated Statistics
+- The statistics frontend adds a dedicated `/didicated` page for Pro Max 5x/20x keys. It uses only frontend-facing paths under `https://statistics.gptclaudegemini.xyz/api/pro-max/keys` and never stores or expects `rawKeyValue`.
+- The Pro Max data source remains GPT Parser at `https://gpt.developing-site.ru/api/bridge/pro-max/...`. The bridge header `x-bridge-token` must be injected only server-side by the statistics host proxy; the secret must not be committed or included in the Vite bundle.
+- Nginx should proxy `/api/pro-max/keys` to `/api/bridge/pro-max/keys` and `/api/pro-max/keys/{id}` to `/api/bridge/pro-max/keys/{id}` with `proxy_ssl_server_name on`, `Host gpt.developing-site.ru`, and a root-owned snippet or environment-specific config for `X-Bridge-Token`.
+- The page filters support all, 5x, 20x, active, and archived states. Problem cards are driven by `lastError`; archived keys are muted. Costs are displayed as USD with two fractional digits.
