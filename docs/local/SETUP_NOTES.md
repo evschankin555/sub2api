@@ -398,3 +398,10 @@ This mode keeps the data in project directories, which simplifies backup, migrat
 - The Pro Max data source remains GPT Parser at `https://gpt.developing-site.ru/api/bridge/pro-max/...`. The bridge header `x-bridge-token` must be injected only server-side by the statistics host proxy; the secret must not be committed or included in the Vite bundle.
 - Nginx should proxy `/api/pro-max/keys` to `/api/bridge/pro-max/keys` and `/api/pro-max/keys/{id}` to `/api/bridge/pro-max/keys/{id}` with `proxy_ssl_server_name on`, `Host gpt.developing-site.ru`, and a root-owned snippet or environment-specific config for `X-Bridge-Token`.
 - The page filters support all, 5x, 20x, active, and archived states. Problem cards are driven by `lastError`; archived keys are muted. Costs are displayed as USD with two fractional digits.
+
+## 2026-06-01 20x/5x 64 MB Request Body Limit
+- `20x.gptclaudegemini.xyz` returned Nginx `413 Request Entity Too Large` for `/responses` requests around 25-27 MB because the mirror proxy had `client_max_body_size 20m` and `MAX_BODY_BYTES=20971520`.
+- Rolled out a blue-green 64 MB mirror service: `ai-route-proxy-sub2api-64m.service`, env `/opt/ai-route-proxy/.env.sub2api-64m`, listener `127.0.0.1:3135`, with `MAX_BODY_BYTES=67108864`.
+- Nginx `20x-5x.gptclaudegemini.xyz.conf` now uses `client_max_body_size 64m` and proxies `20x/5x` traffic to `127.0.0.1:3135`; statistics sub2api telemetry routes also point to `3135`.
+- The old `ai-route-proxy-sub2api.service` on `127.0.0.1:3134` was left running until `active_streams=0`, then stopped and disabled. Its fallback env `/opt/ai-route-proxy/.env.sub2api` was also updated to `MAX_BODY_BYTES=67108864`.
+- Validation passed: `nginx -t`, public `20x` and `5x` `/healthz` return `200`, sub2api telemetry returns `200`, and a `26,214,445` byte smoke POST to `https://20x.gptclaudegemini.xyz/responses` reached upstream and returned `401 INVALID_API_KEY` instead of Nginx `413`.
